@@ -34,6 +34,19 @@ ffprobe_command = [
     "/Users/huyenphung/Downloads/ffprobe", "-loglevel", "error", 
     "-select_streams", "v:0", "-show_entries", "packet=pts_time,flags", 
     "-of", "csv=print_section=0", input_video
-]``` 
-
+]
+``` 
 - Also be mindful about paths (input, output). Need clean code for this but later
+
+# How to Download for Metadata Retrieval
+### Installing using PIP
+`pip install -r requirements.txt`
+
+### keyframe_extraction/extract_keyframes.ipynb
+- Download ffmpeg (you will also need this) https://www.ffmpeg.org/download.html
+- Follow this instruction: https://www.reddit.com/r/ffmpeg/comments/116alkt/how_do_i_use_ffprobe_without_installing_ffmpeg/
+- Contact Harley Phung (hkp15@case.edu) if needed
+
+### metadata_extraction/object_recognition.ipynb
+- We used mediapipe and followed the instruction from this website https://ai.google.dev/edge/mediapipe/solutions/vision/object_detector/python
+- Need to install the recommended version from this website https://ai.google.dev/edge/mediapipe/solutions/vision/object_detector/index#models
