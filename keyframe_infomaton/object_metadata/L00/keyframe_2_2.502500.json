@@ -1,0 +1,52 @@
+[
+    {
+        "bounding_box": {
+            "xmin": 0,
+            "ymin": 36,
+            "width": 1046,
+            "height": 917
+        },
+        "score": 0.71875,
+        "category_name": "tv"
+    },
+    {
+        "bounding_box": {
+            "xmin": 167,
+            "ymin": 175,
+            "width": 362,
+            "height": 448
+        },
+        "score": 0.38671875,
+        "category_name": "person"
+    },
+    {
+        "bounding_box": {
+            "xmin": 1545,
+            "ymin": 916,
+            "width": 220,
+            "height": 152
+        },
+        "score": 0.15625,
+        "category_name": "cat"
+    },
+    {
+        "bounding_box": {
+            "xmin": 1491,
+            "ymin": 1002,
+            "width": 224,
+            "height": 72
+        },
+        "score": 0.12109375,
+        "category_name": "cup"
+    },
+    {
+        "bounding_box": {
+            "xmin": 337,
+            "ymin": 943,
+            "width": 299,
+            "height": 130
+        },
+        "score": 0.09765625,
+        "category_name": "book"
+    }
+]

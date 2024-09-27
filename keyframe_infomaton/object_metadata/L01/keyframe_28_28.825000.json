@@ -1,0 +1,52 @@
+[
+    {
+        "bounding_box": {
+            "xmin": 762,
+            "ymin": 798,
+            "width": 242,
+            "height": 610
+        },
+        "score": 0.4765625,
+        "category_name": "person"
+    },
+    {
+        "bounding_box": {
+            "xmin": 120,
+            "ymin": 1418,
+            "width": 863,
+            "height": 476
+        },
+        "score": 0.38671875,
+        "category_name": "couch"
+    },
+    {
+        "bounding_box": {
+            "xmin": 869,
+            "ymin": 927,
+            "width": 203,
+            "height": 711
+        },
+        "score": 0.36328125,
+        "category_name": "person"
+    },
+    {
+        "bounding_box": {
+            "xmin": 792,
+            "ymin": 754,
+            "width": 108,
+            "height": 101
+        },
+        "score": 0.24609375,
+        "category_name": "cell phone"
+    },
+    {
+        "bounding_box": {
+            "xmin": 515,
+            "ymin": 1464,
+            "width": 133,
+            "height": 98
+        },
+        "score": 0.15625,
+        "category_name": "donut"
+    }
+]

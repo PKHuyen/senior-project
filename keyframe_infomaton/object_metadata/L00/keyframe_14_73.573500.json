@@ -1,0 +1,52 @@
+[
+    {
+        "bounding_box": {
+            "xmin": 427,
+            "ymin": 491,
+            "width": 1196,
+            "height": 577
+        },
+        "score": 0.4765625,
+        "category_name": "tv"
+    },
+    {
+        "bounding_box": {
+            "xmin": 596,
+            "ymin": 294,
+            "width": 125,
+            "height": 79
+        },
+        "score": 0.26171875,
+        "category_name": "clock"
+    },
+    {
+        "bounding_box": {
+            "xmin": 0,
+            "ymin": 10,
+            "width": 1761,
+            "height": 913
+        },
+        "score": 0.2109375,
+        "category_name": "chair"
+    },
+    {
+        "bounding_box": {
+            "xmin": 771,
+            "ymin": 665,
+            "width": 317,
+            "height": 343
+        },
+        "score": 0.14453125,
+        "category_name": "potted plant"
+    },
+    {
+        "bounding_box": {
+            "xmin": 802,
+            "ymin": 728,
+            "width": 101,
+            "height": 85
+        },
+        "score": 0.14453125,
+        "category_name": "person"
+    }
+]

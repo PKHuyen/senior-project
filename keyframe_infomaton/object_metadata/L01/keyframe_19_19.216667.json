@@ -1,0 +1,52 @@
+[
+    {
+        "bounding_box": {
+            "xmin": 379,
+            "ymin": 579,
+            "width": 306,
+            "height": 813
+        },
+        "score": 0.71875,
+        "category_name": "person"
+    },
+    {
+        "bounding_box": {
+            "xmin": 793,
+            "ymin": 1042,
+            "width": 66,
+            "height": 149
+        },
+        "score": 0.34375,
+        "category_name": "person"
+    },
+    {
+        "bounding_box": {
+            "xmin": 848,
+            "ymin": 1058,
+            "width": 55,
+            "height": 133
+        },
+        "score": 0.23046875,
+        "category_name": "person"
+    },
+    {
+        "bounding_box": {
+            "xmin": 0,
+            "ymin": 1409,
+            "width": 1080,
+            "height": 494
+        },
+        "score": 0.2109375,
+        "category_name": "car"
+    },
+    {
+        "bounding_box": {
+            "xmin": 361,
+            "ymin": 985,
+            "width": 76,
+            "height": 406
+        },
+        "score": 0.19921875,
+        "category_name": "person"
+    }
+]

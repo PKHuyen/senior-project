@@ -1,0 +1,52 @@
+[
+    {
+        "bounding_box": {
+            "xmin": 456,
+            "ymin": 542,
+            "width": 337,
+            "height": 698
+        },
+        "score": 0.83203125,
+        "category_name": "person"
+    },
+    {
+        "bounding_box": {
+            "xmin": 734,
+            "ymin": 970,
+            "width": 171,
+            "height": 199
+        },
+        "score": 0.453125,
+        "category_name": "car"
+    },
+    {
+        "bounding_box": {
+            "xmin": 913,
+            "ymin": 976,
+            "width": 55,
+            "height": 192
+        },
+        "score": 0.26171875,
+        "category_name": "person"
+    },
+    {
+        "bounding_box": {
+            "xmin": 405,
+            "ymin": 770,
+            "width": 165,
+            "height": 474
+        },
+        "score": 0.23046875,
+        "category_name": "person"
+    },
+    {
+        "bounding_box": {
+            "xmin": 486,
+            "ymin": 1197,
+            "width": 228,
+            "height": 167
+        },
+        "score": 0.23046875,
+        "category_name": "skateboard"
+    }
+]
