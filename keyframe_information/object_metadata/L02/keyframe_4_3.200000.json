@@ -1,0 +1,52 @@
+[
+    {
+        "bounding_box": {
+            "xmin": 6,
+            "ymin": 306,
+            "width": 706,
+            "height": 960
+        },
+        "score": 0.71875,
+        "category_name": "person"
+    },
+    {
+        "bounding_box": {
+            "xmin": 0,
+            "ymin": 333,
+            "width": 304,
+            "height": 317
+        },
+        "score": 0.28125,
+        "category_name": "chair"
+    },
+    {
+        "bounding_box": {
+            "xmin": 39,
+            "ymin": 672,
+            "width": 440,
+            "height": 383
+        },
+        "score": 0.19921875,
+        "category_name": "teddy bear"
+    },
+    {
+        "bounding_box": {
+            "xmin": 0,
+            "ymin": 906,
+            "width": 484,
+            "height": 376
+        },
+        "score": 0.18359375,
+        "category_name": "teddy bear"
+    },
+    {
+        "bounding_box": {
+            "xmin": 0,
+            "ymin": 621,
+            "width": 188,
+            "height": 598
+        },
+        "score": 0.14453125,
+        "category_name": "teddy bear"
+    }
+]

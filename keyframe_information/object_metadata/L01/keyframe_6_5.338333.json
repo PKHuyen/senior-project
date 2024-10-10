@@ -1,0 +1,52 @@
+[
+    {
+        "bounding_box": {
+            "xmin": 543,
+            "ymin": 540,
+            "width": 305,
+            "height": 755
+        },
+        "score": 0.90234375,
+        "category_name": "person"
+    },
+    {
+        "bounding_box": {
+            "xmin": 839,
+            "ymin": 1653,
+            "width": 116,
+            "height": 120
+        },
+        "score": 0.28125,
+        "category_name": "sports ball"
+    },
+    {
+        "bounding_box": {
+            "xmin": 395,
+            "ymin": 1685,
+            "width": 100,
+            "height": 109
+        },
+        "score": 0.26171875,
+        "category_name": "sports ball"
+    },
+    {
+        "bounding_box": {
+            "xmin": 466,
+            "ymin": 1399,
+            "width": 136,
+            "height": 149
+        },
+        "score": 0.16796875,
+        "category_name": "sports ball"
+    },
+    {
+        "bounding_box": {
+            "xmin": 598,
+            "ymin": 1248,
+            "width": 233,
+            "height": 155
+        },
+        "score": 0.15625,
+        "category_name": "skateboard"
+    }
+]

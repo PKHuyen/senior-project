@@ -1,0 +1,52 @@
+[
+    {
+        "bounding_box": {
+            "xmin": 59,
+            "ymin": 1406,
+            "width": 880,
+            "height": 476
+        },
+        "score": 0.5,
+        "category_name": "couch"
+    },
+    {
+        "bounding_box": {
+            "xmin": 883,
+            "ymin": 965,
+            "width": 196,
+            "height": 711
+        },
+        "score": 0.28125,
+        "category_name": "person"
+    },
+    {
+        "bounding_box": {
+            "xmin": 769,
+            "ymin": 849,
+            "width": 242,
+            "height": 543
+        },
+        "score": 0.23046875,
+        "category_name": "person"
+    },
+    {
+        "bounding_box": {
+            "xmin": 1017,
+            "ymin": 656,
+            "width": 58,
+            "height": 261
+        },
+        "score": 0.23046875,
+        "category_name": "laptop"
+    },
+    {
+        "bounding_box": {
+            "xmin": 8,
+            "ymin": 1108,
+            "width": 128,
+            "height": 178
+        },
+        "score": 0.18359375,
+        "category_name": "chair"
+    }
+]

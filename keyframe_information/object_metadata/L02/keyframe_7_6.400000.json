@@ -1,0 +1,52 @@
+[
+    {
+        "bounding_box": {
+            "xmin": 13,
+            "ymin": 287,
+            "width": 692,
+            "height": 998
+        },
+        "score": 0.63671875,
+        "category_name": "person"
+    },
+    {
+        "bounding_box": {
+            "xmin": 0,
+            "ymin": 344,
+            "width": 305,
+            "height": 299
+        },
+        "score": 0.34375,
+        "category_name": "chair"
+    },
+    {
+        "bounding_box": {
+            "xmin": 149,
+            "ymin": 757,
+            "width": 391,
+            "height": 512
+        },
+        "score": 0.18359375,
+        "category_name": "cat"
+    },
+    {
+        "bounding_box": {
+            "xmin": 4,
+            "ymin": 601,
+            "width": 216,
+            "height": 659
+        },
+        "score": 0.15625,
+        "category_name": "chair"
+    },
+    {
+        "bounding_box": {
+            "xmin": 149,
+            "ymin": 605,
+            "width": 329,
+            "height": 203
+        },
+        "score": 0.07421875,
+        "category_name": "donut"
+    }
+]

@@ -1,0 +1,52 @@
+[
+    {
+        "bounding_box": {
+            "xmin": 9,
+            "ymin": 5,
+            "width": 1828,
+            "height": 1068
+        },
+        "score": 0.4765625,
+        "category_name": "chair"
+    },
+    {
+        "bounding_box": {
+            "xmin": 592,
+            "ymin": 296,
+            "width": 128,
+            "height": 77
+        },
+        "score": 0.18359375,
+        "category_name": "clock"
+    },
+    {
+        "bounding_box": {
+            "xmin": 1690,
+            "ymin": 113,
+            "width": 128,
+            "height": 211
+        },
+        "score": 0.11328125,
+        "category_name": "scissors"
+    },
+    {
+        "bounding_box": {
+            "xmin": 1680,
+            "ymin": 826,
+            "width": 167,
+            "height": 215
+        },
+        "score": 0.11328125,
+        "category_name": "book"
+    },
+    {
+        "bounding_box": {
+            "xmin": 0,
+            "ymin": 152,
+            "width": 523,
+            "height": 932
+        },
+        "score": 0.08203125,
+        "category_name": "refrigerator"
+    }
+]

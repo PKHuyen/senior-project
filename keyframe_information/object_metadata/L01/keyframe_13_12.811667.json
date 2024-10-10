@@ -1,0 +1,52 @@
+[
+    {
+        "bounding_box": {
+            "xmin": 474,
+            "ymin": 507,
+            "width": 283,
+            "height": 831
+        },
+        "score": 0.7890625,
+        "category_name": "person"
+    },
+    {
+        "bounding_box": {
+            "xmin": 69,
+            "ymin": 782,
+            "width": 114,
+            "height": 256
+        },
+        "score": 0.18359375,
+        "category_name": "person"
+    },
+    {
+        "bounding_box": {
+            "xmin": 11,
+            "ymin": 1404,
+            "width": 1066,
+            "height": 504
+        },
+        "score": 0.15625,
+        "category_name": "suitcase"
+    },
+    {
+        "bounding_box": {
+            "xmin": 451,
+            "ymin": 766,
+            "width": 161,
+            "height": 523
+        },
+        "score": 0.14453125,
+        "category_name": "backpack"
+    },
+    {
+        "bounding_box": {
+            "xmin": 1021,
+            "ymin": 981,
+            "width": 58,
+            "height": 112
+        },
+        "score": 0.12109375,
+        "category_name": "person"
+    }
+]

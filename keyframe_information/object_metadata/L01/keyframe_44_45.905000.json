@@ -1,0 +1,52 @@
+[
+    {
+        "bounding_box": {
+            "xmin": 108,
+            "ymin": 528,
+            "width": 400,
+            "height": 754
+        },
+        "score": 0.76953125,
+        "category_name": "person"
+    },
+    {
+        "bounding_box": {
+            "xmin": 277,
+            "ymin": 789,
+            "width": 566,
+            "height": 493
+        },
+        "score": 0.4296875,
+        "category_name": "person"
+    },
+    {
+        "bounding_box": {
+            "xmin": 5,
+            "ymin": 1010,
+            "width": 1069,
+            "height": 785
+        },
+        "score": 0.28125,
+        "category_name": "bed"
+    },
+    {
+        "bounding_box": {
+            "xmin": 32,
+            "ymin": 1192,
+            "width": 356,
+            "height": 207
+        },
+        "score": 0.26171875,
+        "category_name": "skateboard"
+    },
+    {
+        "bounding_box": {
+            "xmin": 1039,
+            "ymin": 932,
+            "width": 36,
+            "height": 207
+        },
+        "score": 0.15625,
+        "category_name": "chair"
+    }
+]
