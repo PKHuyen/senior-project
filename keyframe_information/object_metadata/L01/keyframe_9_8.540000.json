@@ -1,0 +1,52 @@
+[
+    {
+        "bounding_box": {
+            "xmin": 428,
+            "ymin": 744,
+            "width": 242,
+            "height": 576
+        },
+        "score": 0.61328125,
+        "category_name": "person"
+    },
+    {
+        "bounding_box": {
+            "xmin": 929,
+            "ymin": 727,
+            "width": 144,
+            "height": 399
+        },
+        "score": 0.30078125,
+        "category_name": "tv"
+    },
+    {
+        "bounding_box": {
+            "xmin": 793,
+            "ymin": 1018,
+            "width": 152,
+            "height": 192
+        },
+        "score": 0.11328125,
+        "category_name": "chair"
+    },
+    {
+        "bounding_box": {
+            "xmin": 0,
+            "ymin": 1683,
+            "width": 158,
+            "height": 224
+        },
+        "score": 0.11328125,
+        "category_name": "umbrella"
+    },
+    {
+        "bounding_box": {
+            "xmin": 386,
+            "ymin": 1424,
+            "width": 133,
+            "height": 149
+        },
+        "score": 0.11328125,
+        "category_name": "sports ball"
+    }
+]

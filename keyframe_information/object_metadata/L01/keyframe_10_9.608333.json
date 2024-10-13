@@ -1,0 +1,52 @@
+[
+    {
+        "bounding_box": {
+            "xmin": 419,
+            "ymin": 715,
+            "width": 207,
+            "height": 610
+        },
+        "score": 0.65625,
+        "category_name": "person"
+    },
+    {
+        "bounding_box": {
+            "xmin": 334,
+            "ymin": 1420,
+            "width": 136,
+            "height": 135
+        },
+        "score": 0.23046875,
+        "category_name": "donut"
+    },
+    {
+        "bounding_box": {
+            "xmin": 917,
+            "ymin": 1086,
+            "width": 162,
+            "height": 684
+        },
+        "score": 0.18359375,
+        "category_name": "person"
+    },
+    {
+        "bounding_box": {
+            "xmin": 162,
+            "ymin": 1428,
+            "width": 175,
+            "height": 161
+        },
+        "score": 0.16796875,
+        "category_name": "banana"
+    },
+    {
+        "bounding_box": {
+            "xmin": 451,
+            "ymin": 725,
+            "width": 92,
+            "height": 228
+        },
+        "score": 0.12109375,
+        "category_name": "person"
+    }
+]

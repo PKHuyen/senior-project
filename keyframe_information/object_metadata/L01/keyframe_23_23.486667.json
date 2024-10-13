@@ -1,0 +1,52 @@
+[
+    {
+        "bounding_box": {
+            "xmin": 513,
+            "ymin": 563,
+            "width": 408,
+            "height": 711
+        },
+        "score": 0.453125,
+        "category_name": "person"
+    },
+    {
+        "bounding_box": {
+            "xmin": 553,
+            "ymin": 835,
+            "width": 81,
+            "height": 215
+        },
+        "score": 0.26171875,
+        "category_name": "person"
+    },
+    {
+        "bounding_box": {
+            "xmin": 552,
+            "ymin": 932,
+            "width": 237,
+            "height": 342
+        },
+        "score": 0.2109375,
+        "category_name": "person"
+    },
+    {
+        "bounding_box": {
+            "xmin": 785,
+            "ymin": 588,
+            "width": 196,
+            "height": 622
+        },
+        "score": 0.16796875,
+        "category_name": "person"
+    },
+    {
+        "bounding_box": {
+            "xmin": 352,
+            "ymin": 1153,
+            "width": 727,
+            "height": 671
+        },
+        "score": 0.15625,
+        "category_name": "bed"
+    }
+]

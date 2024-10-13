@@ -1,0 +1,52 @@
+[
+    {
+        "bounding_box": {
+            "xmin": 0,
+            "ymin": 297,
+            "width": 720,
+            "height": 979
+        },
+        "score": 0.71875,
+        "category_name": "person"
+    },
+    {
+        "bounding_box": {
+            "xmin": 9,
+            "ymin": 306,
+            "width": 300,
+            "height": 323
+        },
+        "score": 0.14453125,
+        "category_name": "chair"
+    },
+    {
+        "bounding_box": {
+            "xmin": 0,
+            "ymin": 637,
+            "width": 147,
+            "height": 266
+        },
+        "score": 0.11328125,
+        "category_name": "chair"
+    },
+    {
+        "bounding_box": {
+            "xmin": 0,
+            "ymin": 394,
+            "width": 203,
+            "height": 697
+        },
+        "score": 0.09765625,
+        "category_name": "chair"
+    },
+    {
+        "bounding_box": {
+            "xmin": 453,
+            "ymin": 829,
+            "width": 224,
+            "height": 188
+        },
+        "score": 0.08984375,
+        "category_name": "cat"
+    }
+]
