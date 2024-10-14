@@ -22,8 +22,8 @@ logging.basicConfig(level=logging.INFO,
 class MyFaiss:
     def __init__(self, bin_clip_file: str, bin_clipv2_file: str, json_path: str, audio_json_path: str, img2audio_json_path: str):
         logging.info("Initializing MyFaiss")
-        self.index_clip = self.load_bin_file(bin_clip_file)
-        # self.index_clipv2 = self.load_bin_file(bin_clipv2_file)
+        # self.index_clip = self.load_bin_file(bin_clip_file)
+        self.index_clipv2 = self.load_bin_file(bin_clipv2_file)
         # self.object_retrieval = object_retrieval()
         # self.ocr_retrieval = ocr_retrieval()
         # self.asr_retrieval = speech_retrieval()
@@ -34,10 +34,10 @@ class MyFaiss:
         self.translater = Translation()
         self.__device = "cuda" if torch.cuda.is_available() else "cpu"
         logging.info(f"Using device: {self.__device}")
-        self.clip_model, _ = clip.load("ViT-B/16", device=self.__device)
-        # self.clipv2_model, _, _ = open_clip.create_model_and_transforms(
-        #     'ViT-L-14', device=self.__device, pretrained='datacomp_xl_s13b_b90k')
-        # self.clipv2_tokenizer = open_clip.get_tokenizer('ViT-L-14')
+        # self.clip_model, _ = clip.load("ViT-B/16", device=self.__device)
+        self.clipv2_model, _, _ = open_clip.create_model_and_transforms(
+            'ViT-L-14', device=self.__device, pretrained='datacomp_xl_s13b_b90k')
+        self.clipv2_tokenizer = open_clip.get_tokenizer('ViT-L-14')
         logging.info("MyFaiss initialization complete")
 
     def load_json_file(self, json_path: str):
@@ -92,12 +92,22 @@ class MyFaiss:
 
 def main():
     logging.info("Starting MyFaiss main process")
-    bin_file = '/Users/huyenphung/Desktop/senior-project/database_processing/faiss_clip.bin'
+    bin_file = '/Users/huyenphung/Desktop/senior-project/database_processing/faiss_clipv2_cosine.bin'
+    # bin_file = '/Users/huyenphung/Desktop/senior-project/database_processing/faiss_clip.bin'
     json_path = '/Users/huyenphung/Desktop/senior-project/keyframe_information/annotation/L00.json'
 
+    # Clip
+    # cosine_faiss = MyFaiss(
+    #     bin_clip_file=bin_file,
+    #     bin_clipv2_file=None,
+    #     json_path=json_path,
+    #     audio_json_path=None,
+    #     img2audio_json_path=None)
+    
+    #Clip_V2
     cosine_faiss = MyFaiss(
-        bin_clip_file=bin_file,
-        bin_clipv2_file=None,
+        bin_clip_file=None,
+        bin_clipv2_file=bin_file,
         json_path=json_path,
         audio_json_path=None,
         img2audio_json_path=None)
@@ -111,10 +121,10 @@ def main():
     # Text search
     logging.info("Performing text search")
     # 0012
-    text = 'teddy bear'
+    text = 'yellow umbrella'
 
     scores, _, infos_query, image_paths = cosine_faiss.text_search(
-        text, k=1, index=None, model_type='clip')
+        text, k=3, index=None, model_type='clip_v2')
     logging.info(f"Text search complete. Found {len(image_paths)} results.")
 
     # Print out all image paths with their scores
