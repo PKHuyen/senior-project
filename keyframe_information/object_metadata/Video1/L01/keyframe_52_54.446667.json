@@ -1,0 +1,52 @@
+[
+    {
+        "bounding_box": {
+            "xmin": 0,
+            "ymin": 638,
+            "width": 350,
+            "height": 1268
+        },
+        "score": 0.38671875,
+        "category_name": "person"
+    },
+    {
+        "bounding_box": {
+            "xmin": 12,
+            "ymin": 723,
+            "width": 224,
+            "height": 544
+        },
+        "score": 0.26171875,
+        "category_name": "person"
+    },
+    {
+        "bounding_box": {
+            "xmin": 351,
+            "ymin": 657,
+            "width": 330,
+            "height": 523
+        },
+        "score": 0.24609375,
+        "category_name": "person"
+    },
+    {
+        "bounding_box": {
+            "xmin": 379,
+            "ymin": 868,
+            "width": 152,
+            "height": 256
+        },
+        "score": 0.23046875,
+        "category_name": "teddy bear"
+    },
+    {
+        "bounding_box": {
+            "xmin": 992,
+            "ymin": 905,
+            "width": 82,
+            "height": 192
+        },
+        "score": 0.2109375,
+        "category_name": "cup"
+    }
+]

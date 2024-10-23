@@ -1,0 +1,52 @@
+[
+    {
+        "bounding_box": {
+            "xmin": 821,
+            "ymin": 897,
+            "width": 247,
+            "height": 1006
+        },
+        "score": 0.453125,
+        "category_name": "person"
+    },
+    {
+        "bounding_box": {
+            "xmin": 1010,
+            "ymin": 631,
+            "width": 64,
+            "height": 167
+        },
+        "score": 0.26171875,
+        "category_name": "tv"
+    },
+    {
+        "bounding_box": {
+            "xmin": 811,
+            "ymin": 924,
+            "width": 165,
+            "height": 457
+        },
+        "score": 0.24609375,
+        "category_name": "person"
+    },
+    {
+        "bounding_box": {
+            "xmin": 36,
+            "ymin": 1350,
+            "width": 863,
+            "height": 513
+        },
+        "score": 0.2109375,
+        "category_name": "couch"
+    },
+    {
+        "bounding_box": {
+            "xmin": 789,
+            "ymin": 879,
+            "width": 75,
+            "height": 438
+        },
+        "score": 0.12109375,
+        "category_name": "person"
+    }
+]

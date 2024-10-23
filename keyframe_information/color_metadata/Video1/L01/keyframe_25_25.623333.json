@@ -1,0 +1,49 @@
+{
+    "dominant_colors_bounding_boxes": [
+        {
+            "bounding_box": {
+                "xmin": 0,
+                "ymin": 0,
+                "width": 1079,
+                "height": 1465
+            },
+            "color_name": "grey"
+        },
+        {
+            "bounding_box": {
+                "xmin": 0,
+                "ymin": 0,
+                "width": 1079,
+                "height": 1877
+            },
+            "color_name": "purple"
+        },
+        {
+            "bounding_box": {
+                "xmin": 0,
+                "ymin": 0,
+                "width": 1079,
+                "height": 1857
+            },
+            "color_name": "grey"
+        },
+        {
+            "bounding_box": {
+                "xmin": 0,
+                "ymin": 376,
+                "width": 1079,
+                "height": 1543
+            },
+            "color_name": "black"
+        },
+        {
+            "bounding_box": {
+                "xmin": 0,
+                "ymin": 539,
+                "width": 1071,
+                "height": 1021
+            },
+            "color_name": "purple"
+        }
+    ]
+}

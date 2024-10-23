@@ -1,0 +1,52 @@
+[
+    {
+        "bounding_box": {
+            "xmin": 285,
+            "ymin": 431,
+            "width": 229,
+            "height": 740
+        },
+        "score": 0.59375,
+        "category_name": "person"
+    },
+    {
+        "bounding_box": {
+            "xmin": 0,
+            "ymin": 37,
+            "width": 424,
+            "height": 1025
+        },
+        "score": 0.3203125,
+        "category_name": "tv"
+    },
+    {
+        "bounding_box": {
+            "xmin": 31,
+            "ymin": 846,
+            "width": 370,
+            "height": 335
+        },
+        "score": 0.28125,
+        "category_name": "couch"
+    },
+    {
+        "bounding_box": {
+            "xmin": 515,
+            "ymin": 5,
+            "width": 556,
+            "height": 1317
+        },
+        "score": 0.24609375,
+        "category_name": "train"
+    },
+    {
+        "bounding_box": {
+            "xmin": 18,
+            "ymin": 824,
+            "width": 784,
+            "height": 951
+        },
+        "score": 0.19921875,
+        "category_name": "couch"
+    }
+]
