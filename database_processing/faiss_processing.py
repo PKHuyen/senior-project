@@ -92,9 +92,9 @@ class MyFaiss:
 
 def main():
     logging.info("Starting MyFaiss main process")
-    bin_file = '/Users/huyenphung/Desktop/senior-project/database_processing/faiss_clipv2_cosine.bin'
+    bin_file = '../database_processing/faiss_clipv2_cosine.bin'
     # bin_file = '/Users/huyenphung/Desktop/senior-project/database_processing/faiss_clip.bin'
-    json_path = '/Users/huyenphung/Desktop/senior-project/keyframe_information/annotation/L00.json'
+    json_path = '../keyframe_information/annotation/L00.json'
 
     # Clip
     # cosine_faiss = MyFaiss(
