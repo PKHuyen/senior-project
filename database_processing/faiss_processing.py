@@ -1,4 +1,4 @@
-from nlp_processing import Translation
+# from nlp_processing import Translation
 import clip
 import open_clip
 import torch
@@ -31,7 +31,7 @@ class MyFaiss:
         self.id2img_fps = self.load_json_file(json_path)
         # self.audio_id2img_id = self.load_json_file(audio_json_path)
         # self.img_id2audio_id = self.load_json_file(img2audio_json_path)
-        self.translater = Translation()
+        # self.translater = Translation()
         self.__device = "cuda" if torch.cuda.is_available() else "cpu"
         logging.info(f"Using device: {self.__device}")
         # self.clip_model, _ = clip.load("ViT-B/16", device=self.__device)
@@ -53,7 +53,7 @@ class MyFaiss:
     def text_search(self, text, index, k, model_type):
         logging.info(
             f"Performing text search with query: '{text}', model: {model_type}, k: {k}")
-        text = self.translater(text)
+        # text = self.translater(text)
         logging.info(f"Translated text: '{text}'")
 
         if model_type == 'clip':
