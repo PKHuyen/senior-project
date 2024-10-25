@@ -1,4 +1,7 @@
 # Video Retrival Timeframe
+## Videos:
+https://drive.google.com/drive/folders/1txH1iI2nWMMkay2jYyHOQqyIfISkLytK?usp=sharing
+
 ## Project Overview
 For our senior project, we are tackling the complex challenge of efficiently retrieving video frame data by developing a sophisticated infrastructure utilizing a vector database to store and manage video frames. This innovative system is designed to enable users to swiftly retrieve specific frames based on nuanced text queries or intuitive UI toggles, significantly improving both accessibility and precision in video content analysis.
 
