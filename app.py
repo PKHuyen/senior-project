@@ -15,17 +15,14 @@ sys.path.append(PROJECT_ROOT)
 
 # Import the MyFaiss class and Translation from your backend
 from database_processing.faiss_processing import MyFaiss
-from database_processing.nlp_processing import Translation
 
 # Define the keyframe directory
-KEYFRAME_DIR = os.path.join(PROJECT_ROOT, 'keyframe_information/keyframe/Video0/L00')
+KEYFRAME_DIR = os.path.join(PROJECT_ROOT, 'keyframe_information/keyframe/Video4/L04')
 
 DEFAULT_PATHS = {
     'bin_clip_file': os.path.join(PROJECT_ROOT, 'database_processing/faiss_clip.bin'),
     'bin_clipv2_file': os.path.join(PROJECT_ROOT, 'database_processing/faiss_clipv2_cosine.bin'),
-    'json_path': os.path.join(PROJECT_ROOT, 'keyframe_information/annotation/L00.json'),
-    'audio_json_path': None,
-    'img2audio_json_path': None
+    'json_path': os.path.join(PROJECT_ROOT, 'keyframe_information/annotation/L04.json')
 }
 
 def resolve_image_path(relative_path: str) -> str:
@@ -83,8 +80,6 @@ class StreamlitImageSearch:
                 bin_clip_file=bin_clip_file,
                 bin_clipv2_file=bin_clipv2_file,
                 json_path=json_path,
-                audio_json_path=DEFAULT_PATHS['audio_json_path'],
-                img2audio_json_path=DEFAULT_PATHS['img2audio_json_path']
             )
             logging.info("FAISS search engine initialized successfully")
             st.sidebar.success("Search engine initialized successfully!")

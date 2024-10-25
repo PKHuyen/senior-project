@@ -1,4 +1,3 @@
-# from nlp_processing import Translation
 import clip
 import open_clip
 import torch
@@ -9,10 +8,6 @@ import logging
 
 import os
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
-# from utils.object_retrieval_engine.object_retrieval import object_retrieval
-# from utils.semantic_embed.speech_retrieval import speech_retrieval
-# from utils.ocr_retrieval_engine.ocr_retrieval import ocr_retrieval
-# from utils.combine_utils import merge_searching_results_by_addition
 
 # Configure logging
 logging.basicConfig(level=logging.INFO,
@@ -20,18 +15,11 @@ logging.basicConfig(level=logging.INFO,
 
 
 class MyFaiss:
-    def __init__(self, bin_clip_file: str, bin_clipv2_file: str, json_path: str, audio_json_path: str, img2audio_json_path: str):
+    def __init__(self, bin_clip_file: str, bin_clipv2_file: str, json_path: str):
         logging.info("Initializing MyFaiss")
         self.index_clip = self.load_bin_file(bin_clip_file)
         self.index_clipv2 = self.load_bin_file(bin_clipv2_file)
-        # self.object_retrieval = object_retrieval()
-        # self.ocr_retrieval = ocr_retrieval()
-        # self.asr_retrieval = speech_retrieval()
-
         self.id2img_fps = self.load_json_file(json_path)
-        # self.audio_id2img_id = self.load_json_file(audio_json_path)
-        # self.img_id2audio_id = self.load_json_file(img2audio_json_path)
-        # self.translater = Translation()
         self.__device = "cuda" if torch.cuda.is_available() else "cpu"
         logging.info(f"Using device: {self.__device}")
         self.clip_model, _ = clip.load("ViT-B/16", device=self.__device)
