@@ -1,18 +1,27 @@
+import os
+import dropbox
+import nbformat
+from nbconvert.preprocessors import ExecutePreprocessor
+import logging
 import clip
 import open_clip
 import torch
 import json
 import faiss
 import numpy as np
-import logging
-
-import os
-os.environ['KMP_DUPLICATE_LIB_OK']='True'
+from keyframe_extraction.extract_keyframes import extraction
+from keyframe_extraction.get_metadata_json import process_keyframe_folders
 
 # Configure logging
-logging.basicConfig(level=logging.INFO,
-                    format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler()
+    ]
+)
 
+os.environ['KMP_DUPLICATE_LIB_OK']='True'
 
 class MyFaiss:
     def __init__(self, bin_clip_file: str, bin_clipv2_file: str, json_path: str):
@@ -41,9 +50,7 @@ class MyFaiss:
     def text_search(self, text, index, k, model_type):
         logging.info(
             f"Performing text search with query: '{text}', model: {model_type}, k: {k}")
-        # text = self.translater(text)
-        logging.info(f"Translated text: '{text}'")
-
+        
         if model_type == 'clip':
             text = clip.tokenize([text]).to(self.__device)
             text_features = self.clip_model.encode_text(text)
@@ -65,12 +72,36 @@ class MyFaiss:
                                                     params=faiss.SearchParametersIVF(sel=id_selector))
         idx_image = idx_image.flatten()
 
-        # Get query info and filter out None values
         infos_query = [self.id2img_fps.get(idx) for idx in list(idx_image)]
         infos_query = [info for info in infos_query if info is not None]
-
-        # Check if 'frame_path' key exists and is not None
         image_paths = [info['frame_path'] for info in infos_query if info and 'frame_path' in info]
         
         logging.info(f"Text search complete. Found {len(image_paths)} results.")
         return scores.flatten(), idx_image, infos_query, image_paths
+
+def main():
+    logging.info("Starting video processing pipeline")
+    
+    # Set paths
+    base_dir = "../senior-project"
+    dropbox_folder_path = "/video"
+    local_folder_path = os.path.join(base_dir, "video")
+    keyframe_output_path = os.path.join(base_dir, "keyframe_information/keyframe/")
+    annotation_output_path = os.path.join(base_dir, "keyframe_information/annotation/")
+
+    try:
+        faiss_instance = MyFaiss(
+            bin_clip_file=os.path.join(base_dir, "database_processing/clip.bin"),
+            bin_clipv2_file=os.path.join(base_dir, "database_processing/clipv2.bin"),
+            json_path=os.path.join(base_dir, "keyframe_information/annotation/all_frames.json")
+        )
+        logging.info("FAISS initialization successful")
+    except Exception as e:
+        logging.error(f"Failed to initialize FAISS: {str(e)}")
+        return
+    
+    logging.info("Pipeline completed successfully")
+    return faiss_instance
+
+if __name__ == "__main__":
+    faiss_instance = main()
