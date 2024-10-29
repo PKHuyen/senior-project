@@ -8,7 +8,7 @@ def get_image_paths(single_key_frame_folder, video_ID):
     for img_name in sorted(os.listdir(single_key_frame_folder)):
         img_path = os.path.join(single_key_frame_folder, img_name)
         frame_timestamp = img_name.replace('.jpg','')
-        image_video_dict[idx] = {'frame_path': img_path, 'video_ID': video_ID, 'timestamp': frame_timestamp}
+        image_video_dict[idx] = {'frame_path': f'.{img_path}', 'video_ID': video_ID, 'timestamp': frame_timestamp}
         idx += 1
     return image_video_dict
 

@@ -48,3 +48,15 @@ For our senior project, we are tackling the complex challenge of efficiently ret
         - Output: ./keyframe_information/text_metadata
 
 ### Packages: Tools for metadata_extraction
+
+## Run Project
+Step 1: Setup Dropbox for video download
+
+Step 2: Run code
+``` 
+python backend_processing.py
+```
+
+```
+streamlit run app.py
+```

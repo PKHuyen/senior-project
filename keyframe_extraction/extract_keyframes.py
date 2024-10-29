@@ -26,7 +26,7 @@ def extraction(input_dir, output_base_dir):
 
         # Get the keyframe timestamps using ffprobe
         ffprobe_command = [
-            "../senior-project/packages/ffprobe", "-loglevel", "error", 
+            "./packages/ffprobe", "-loglevel", "error", 
             "-select_streams", "v:0", "-show_entries", "packet=pts_time,flags", 
             "-of", "csv=print_section=0", input_video_path
         ]
