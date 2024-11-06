@@ -21,16 +21,16 @@ def run_notebook(notebook_path, output_dir=None):
         return False
 
 ############# Keyframe Extraction ###############
-run_notebook("/keyframe_extraction/extract_keyframes.ipynb")
+run_notebook("keyframe_extraction/extract_keyframes.ipynb")
 
 ############# Annotation ###############
-run_notebook("/keyframe_extraction/get_metadata_json.ipynb")
+run_notebook("keyframe_extraction/get_metadata_json.ipynb")
 
 ############# CLIP ###############
-run_notebook("/database_processing/clip.ipynb")
+run_notebook("database_processing/clip.ipynb")
 
 ############# CLIPv2 ###############
-run_notebook("/database_processing/clipv2.ipynb")
+run_notebook("database_processing/clipv2.ipynb")
 
 ############# create_bin ###############
-run_notebook("/database_processing/create_bin.ipynb")
+run_notebook("database_processing/create_bin.ipynb")
