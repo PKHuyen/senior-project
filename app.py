@@ -17,12 +17,12 @@ sys.path.append(PROJECT_ROOT)
 from database_processing.faiss_processing import MyFaiss
 
 # Define the keyframe directory
-KEYFRAME_DIR = os.path.join(PROJECT_ROOT, 'keyframe_information/keyframe/Video0/L00')
+KEYFRAME_DIR = os.path.join(PROJECT_ROOT, 'keyframe_information/keyframe/Video4/L05')
 
 DEFAULT_PATHS = {
     'bin_clip_file': os.path.join(PROJECT_ROOT, 'database_processing/faiss_clip.bin'),
     'bin_clipv2_file': os.path.join(PROJECT_ROOT, 'database_processing/faiss_clipv2_cosine.bin'),
-    'json_path': os.path.join(PROJECT_ROOT, 'keyframe_information/annotation/L00.json')
+    'json_path': os.path.join(PROJECT_ROOT, 'keyframe_information/annotation/L05.json')
 }
 
 def resolve_image_path(relative_path: str) -> str:
