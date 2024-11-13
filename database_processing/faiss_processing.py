@@ -5,8 +5,10 @@ import json
 import faiss
 import numpy as np
 import logging
-
+import tempfile
 import os
+from io import BytesIO
+
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 
 # Configure logging
@@ -28,15 +30,36 @@ class MyFaiss:
         self.clipv2_tokenizer = open_clip.get_tokenizer('ViT-L-14')
         logging.info("MyFaiss initialization complete")
 
-    def load_json_file(self, json_path: str):
-        logging.info(f"Loading JSON file: {json_path}")
-        with open(json_path, 'r') as f:
-            js = json.load(f)
-        return {int(k): v for k, v in js.items()}
+    # def load_json_file(self, json_path: str):
+    #     logging.info(f"Loading JSON file: {json_path}")
+    #     with open(json_path, 'r') as f:
+    #         js = json.load(f)
+    #     return {int(k): v for k, v in js.items()}
+    def load_json_file(self, json_path):
+        if isinstance(json_path, BytesIO):
+            # Read directly from the BytesIO object
+            json_path.seek(0)  # Ensure we're at the start of the file
+            return json.load(json_path)
+        else:
+            # Handle case when json_path is a file path string
+            with open(json_path, 'r') as f:
+                return json.load(f)
 
-    def load_bin_file(self, bin_file: str):
-        logging.info(f"Loading bin file: {bin_file}")
-        return faiss.read_index(bin_file)
+    # def load_bin_file(self, bin_file: str):
+    #     logging.info(f"Loading bin file: {bin_file}")
+    #     return faiss.read_index(bin_file)
+
+
+    def load_bin_file(self, bin_file):
+        if isinstance(bin_file, BytesIO):
+            # Create a temporary file to hold the BytesIO data
+            with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+                temp_file.write(bin_file.read())
+                temp_file_path = temp_file.name
+            return faiss.read_index(temp_file_path)
+        else:
+            return faiss.read_index(bin_file)
+
 
     def text_search(self, text, index, k, model_type):
         logging.info(
