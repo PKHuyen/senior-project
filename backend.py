@@ -1,36 +1,38 @@
-############# Run Notebook ###############
 import os
-import nbformat
-from nbconvert.preprocessors import ExecutePreprocessor
-def run_notebook(notebook_path, output_dir=None):
-    print (f"Run {notebook_path}")
+import logging
+import streamlit as st
+import google.auth
+from google.auth.transport.requests import Request
+from google_auth_oauthlib.flow import InstalledAppFlow
+from googleapiclient.discovery import build
+
+SCOPES = 'https://www.googleapis.com/auth/drive'
+CLIENT_SECRET = 'credentials.json'
+# Define the Google Drive folder ID
+GOOGLE_DRIVE_FOLDER_ID = 'your-google-drive-folder-id'
+PROJECT_ROOT = ''
+def get_files_from_drive(folder_id):
+    
     try:
-        notebook_dir = os.path.dirname(os.path.abspath(notebook_path))
-        with open(notebook_path, 'r', encoding='utf-8') as f:
-            notebook = nbformat.read(f, as_version=4)
-        exec_processor = ExecutePreprocessor(
-            timeout=600,  # 10 minute timeout
-            kernel_name='python3'
-        )
+        if os.path.exists('token.json'):
+            creds = google.auth.load_credentials_from_file('token.json')[0]
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(CLIENT_SECRET, SCOPES)
+            creds = flow.run_local_server(port=8502)
+            with open('token.json', 'w') as token:
+                token.write(creds.to_json())
+
+        # Initialize the Drive service with credentials
+        service = build('drive', 'v3', credentials=creds)
         
-        exec_processor.preprocess(notebook, {'metadata': {'path': notebook_dir}})
-        print (f"Finish {notebook_path}")  
-        return True
-
+        # Query to fetch files in the specified folder
+        query = f"'{folder_id}' in parents"
+        response = service.files().list(q=query, fields="files(id, name)").execute()
+        
+        # Return the list of files
+        return response.get('files', [])
+    
     except Exception as e:
-        return False
-
-############# Keyframe Extraction ###############
-run_notebook("keyframe_extraction/extract_keyframes.ipynb")
-
-############# Annotation ###############
-run_notebook("keyframe_extraction/get_metadata_json.ipynb")
-
-############# CLIP ###############
-run_notebook("database_processing/clip.ipynb")
-
-############# CLIPv2 ###############
-run_notebook("database_processing/clipv2.ipynb")
-
-############# create_bin ###############
-run_notebook("database_processing/create_bin.ipynb")
+        logging.error(f"Error fetching files from Google Drive: {e}")
+        st.error("Failed to fetch files from the specified Google Drive folder.")
+        return []

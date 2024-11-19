@@ -2,3 +2,4 @@ node_modules
 .DS_Store
 database_processing/__pycache__
 .env
+credentials.json
