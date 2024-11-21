@@ -1,4 +1,17 @@
 streamlit
+<<<<<<< Updated upstream
+=======
+PIL
+io
+google_auth_oauthlib.flow
+googleapiclient.discovery
+googleapiclient.errors
+googleapiclient.http
+logging
+typing
+requests
+tqdm
+>>>>>>> Stashed changes
 pillow
 torch
 open_clip_torch
