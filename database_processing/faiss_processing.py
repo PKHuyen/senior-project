@@ -108,17 +108,12 @@ import json
 import faiss
 import numpy as np
 import logging
-<<<<<<< Updated upstream
-
-import os
-=======
 import tempfile
 import os
 from io import BytesIO
 from googleapiclient.errors import HttpError
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload
->>>>>>> Stashed changes
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 
 # Configure logging
@@ -146,17 +141,6 @@ class MyFaiss:
         self.clipv2_tokenizer = open_clip.get_tokenizer('ViT-L-14')
         logging.info("MyFaiss initialization complete")
 
-<<<<<<< Updated upstream
-    def load_json_file(self, json_path: str):
-        logging.info(f"Loading JSON file: {json_path}")
-        with open(json_path, 'r') as f:
-            js = json.load(f)
-        return {int(k): v for k, v in js.items()}
-
-    def load_bin_file(self, bin_file: str):
-        logging.info(f"Loading bin file: {bin_file}")
-        return faiss.read_index(bin_file)
-=======
     def load_bin_file(self, bin_file):
         # If it's a BytesIO object, use it directly
         if isinstance(bin_file, BytesIO):
@@ -273,7 +257,6 @@ class MyFaiss:
         except Exception as e:
             logging.error(f"Error loading JSON file from Drive: {e}")
             raise
->>>>>>> Stashed changes
 
     def text_search(self, text, index, k, model_type):
         logging.info(

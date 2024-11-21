@@ -1,6 +1,4 @@
 streamlit
-<<<<<<< Updated upstream
-=======
 PIL
 io
 google_auth_oauthlib.flow
@@ -11,7 +9,6 @@ logging
 typing
 requests
 tqdm
->>>>>>> Stashed changes
 pillow
 torch
 open_clip_torch

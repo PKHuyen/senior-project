@@ -1,25 +1,3 @@
-<<<<<<< Updated upstream
-import streamlit as st
-import os
-import sys
-from PIL import Image
-import logging
-from typing import List, Tuple
-
-# Configure logging
-logging.basicConfig(level=logging.INFO,
-                   format='%(asctime)s - %(levelname)s - %(message)s')
-
-# Add the project root to Python path for imports
-PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(PROJECT_ROOT)
-
-# Import the MyFaiss class and Translation from your backend
-from database_processing.faiss_processing import MyFaiss
-
-# Define the keyframe directory
-KEYFRAME_DIR = os.path.join(PROJECT_ROOT, 'keyframe_information/keyframe/Video4/L05')
-=======
 # import streamlit as st
 # import os
 # import sys
@@ -251,7 +229,6 @@ class GoogleDriveKeyframeManager:
     def __init__(self, dictionary_id='1l5D8idS8nXKD_E5A0SlM5ok2bE1iMrF1'):
         self.dictionary_id = dictionary_id
         self.service = self.authenticate_google_drive()
->>>>>>> Stashed changes
 
     def authenticate_google_drive(self):
         """Authenticate and create Google Drive service"""
@@ -260,15 +237,6 @@ class GoogleDriveKeyframeManager:
         service = build('drive', 'v3', credentials=creds)
         return service
 
-<<<<<<< Updated upstream
-def resolve_image_path(relative_path: str) -> str:
-    """Convert relative path to absolute path"""
-    if relative_path.startswith('..'):
-        clean_path = relative_path.replace('../', '')
-        return os.path.join(PROJECT_ROOT, clean_path)
-    return relative_path
-
-=======
     def list_files(self):
         try:
             # List all files in the main directory and its subfolders
@@ -304,7 +272,6 @@ def resolve_image_path(relative_path: str) -> str:
             return None
 
 # Modify the existing StreamlitImageSearch class
->>>>>>> Stashed changes
 class StreamlitImageSearch:
     def __init__(self):
         st.set_page_config(
@@ -313,12 +280,9 @@ class StreamlitImageSearch:
             layout="wide"
         )
         
-<<<<<<< Updated upstream
-=======
         # Initialize Google Drive Keyframe Manager
         self.drive_manager = GoogleDriveKeyframeManager()
         
->>>>>>> Stashed changes
         # Initialize MyFaiss
         self.setup_faiss()
 
@@ -375,35 +339,6 @@ class StreamlitImageSearch:
             import traceback
             st.code(traceback.format_exc())
 
-<<<<<<< Updated upstream
-    def load_and_display_images(self, image_paths: List[str], scores: List[float]):
-        """Load and display images in a grid layout"""
-        cols = st.columns(3)  # Create 3 columns for grid layout
-
-        for idx, (image_path, score) in enumerate(zip(image_paths, scores)):
-            try:
-                col_idx = idx % 3
-                with cols[col_idx]:
-                    # Resolve the full image path
-                    full_path = resolve_image_path(image_path)
-                    
-                    if os.path.exists(full_path):
-                        image = Image.open(full_path)
-                        st.image(image, caption=f"Score: {score:.4f}")
-                        with st.expander("Image Details"):
-                            st.text(f"Original Path: {image_path}")
-                            st.text(f"Full Path: {full_path}")
-                            # Add frame time from filename
-                            frame_time = os.path.splitext(os.path.basename(full_path))[0].split('_')[-1]
-                            st.text(f"Frame Time: {frame_time} seconds")
-                    else:
-                        st.warning(f"Image not found at: {full_path}")
-                        st.text(f"Original path: {image_path}")
-            except Exception as e:
-                st.error(f"Error loading image {image_path}: {str(e)}")
-                logging.error(f"Image loading error: {str(e)}")
-=======
-
     def load_and_display_images(self, image_ids: List[str], scores: List[float]):
         """Load and display images from Google Drive in a grid layout"""
         cols = st.columns(3)  # Create 3 columns for grid layout
@@ -423,7 +358,6 @@ class StreamlitImageSearch:
                         st.warning(f"Image not found with ID: {image_id}")
             except Exception as e:
                 st.error(f"Error loading image {image_id}: {str(e)}")
->>>>>>> Stashed changes
 
     def run(self):
         """Run the Streamlit application"""
