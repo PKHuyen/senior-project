@@ -272,7 +272,22 @@ class GoogleDriveKeyframeManager:
             st.error(f'An error occurred: {error}')
             return None
 
-# Modify the existing StreamlitImageSearch class
+def initialize_search_engine(drive_service):
+    if 'search_engine' not in st.session_state:
+        try:
+            st.session_state.search_engine = MyFaiss(
+                bin_clip_file = '1XsdUu-NTVbgXt-ch_OdohsNQyHLdtwHN',
+                bin_clipv2_file = '1RPKwzzgWqT68rWFEO2xSwLOuAaboVEJu',
+                json_path = '1ZM-q1El6oV18hpzBIJjwNCDrEhvOx6s2',
+                drive_service=drive_service
+            )
+            return True
+        except Exception as e:
+            st.error(f"Error initializing search engine: {str(e)}")
+            logging.error(f"Search engine initialization error: {str(e)}")
+            return False
+    return True
+
 class StreamlitImageSearch:
     def __init__(self):
         st.set_page_config(
@@ -283,6 +298,8 @@ class StreamlitImageSearch:
         
         # Initialize Google Drive Keyframe Manager
         self.drive_manager = GoogleDriveKeyframeManager()
+        if not initialize_search_engine(self.drive_manager.service):
+            st.stop()
         
         # Initialize MyFaiss
         self.setup_faiss()
@@ -398,10 +415,10 @@ class StreamlitImageSearch:
             st.info(f"Using {model_type.upper()} model")
 
         if search_clicked:
-            if query:
+            if query and 'search_engine' in st.session_state:
                 try:
                     with st.spinner(f"Searching with {model_type.upper()} for: '{query}'"):
-                        scores, _, infos_query, image_paths = self.search_engine.text_search(
+                        scores, _, infos_query, image_paths = st.session_state.search_engine.text_search(
                             text=query,
                             k=k_results,
                             index=None,
