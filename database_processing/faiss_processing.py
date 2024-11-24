@@ -159,35 +159,6 @@ class MyFaiss:
         
         raise ValueError(f"Cannot load binary file: {bin_file}")
 
-    # def load_bin_file_from_drive(self, file_id):
-    #     try:
-    #         # First, get the file metadata
-    #         file_metadata = self.drive_service.files().get(fileId=file_id).execute()
-            
-    #         # Check if the file needs export
-    #         if file_metadata.get('mimeType') != 'application/octet-stream':
-    #             # Request to export as binary
-    #             request = self.drive_service.files().get_media(fileId=file_id)
-    #         else:
-    #             # Directly download if it's already a binary file
-    #             request = self.drive_service.files().get_media(fileId=file_id)
-            
-    #         file = BytesIO()
-    #         downloader = MediaIoBaseDownload(file, request)
-    #         done = False
-    #         while done is False:
-    #             status, done = downloader.next_chunk()
-            
-    #         file.seek(0)
-    #         with tempfile.NamedTemporaryFile(delete=False) as temp_file:
-    #             temp_file.write(file.read())
-    #             temp_file_path = temp_file.name
-            
-    #         return faiss.read_index(temp_file_path)
-    #     except HttpError as error:
-    #         logging.error(f"Error loading bin file from Drive: {error}")
-    #         raise
-
     def load_bin_file_from_drive(self, file_id):
         try:
             # First, get the file metadata
@@ -226,22 +197,40 @@ class MyFaiss:
             logging.error(f"Error loading bin file from Drive: {error}")
             raise
 
+    # def load_json_file(self, json_path):
+    #     # If it's a BytesIO object, use it directly
+    #     if isinstance(json_path, BytesIO):
+    #         json_path.seek(0)
+    #         return json.load(json_path)
+        
+    #     # If it's a file path, use it directly
+    #     if os.path.exists(json_path):
+    #         with open(json_path, 'r') as f:
+    #             return json.load(f)
+        
+    #     # If it's a Google Drive file ID
+    #     if self.drive_service:
+    #         return self.load_json_file_from_drive(json_path)
+        
+    #     raise ValueError(f"Cannot load JSON file: {json_path}")
+
     def load_json_file(self, json_path):
         # If it's a BytesIO object, use it directly
         if isinstance(json_path, BytesIO):
             json_path.seek(0)
-            return json.load(json_path)
-        
+            data = json.load(json_path)
         # If it's a file path, use it directly
-        if os.path.exists(json_path):
+        elif os.path.exists(json_path):
             with open(json_path, 'r') as f:
-                return json.load(f)
-        
+                data = json.load(f)
         # If it's a Google Drive file ID
-        if self.drive_service:
-            return self.load_json_file_from_drive(json_path)
+        elif self.drive_service:
+            data = self.load_json_file_from_drive(json_path)
+        else:
+            raise ValueError(f"Cannot load JSON file: {json_path}")
         
-        raise ValueError(f"Cannot load JSON file: {json_path}")
+        # Make sure keys are strings
+        return {str(k): v for k, v in data.items()}
 
     def load_json_file_from_drive(self, file_id):
         try:
@@ -258,11 +247,59 @@ class MyFaiss:
             logging.error(f"Error loading JSON file from Drive: {e}")
             raise
 
+    # def text_search(self, text, index, k, model_type):
+    #     logging.info(
+    #         f"Performing text search with query: '{text}', model: {model_type}, k: {k}")
+    #     logging.info(f"Translated text: '{text}'")
+
+    #     if model_type == 'clip':
+    #         text = clip.tokenize([text]).to(self.__device)
+    #         text_features = self.clip_model.encode_text(text)
+    #     else:
+    #         text = self.clipv2_tokenizer([text]).to(self.__device)
+    #         text_features = self.clipv2_model.encode_text(text)
+
+    #     text_features /= text_features.norm(dim=-1, keepdim=True)
+    #     text_features = text_features.cpu().detach().numpy().astype(np.float32)
+
+    #     index_choosed = self.index_clip if model_type == 'clip' else self.index_clipv2
+
+    #     if index is None:
+    #         scores, idx_image = index_choosed.search(text_features, k=k)
+    #     else:
+    #         logging.info(f"Using custom index with {len(index)} items")
+    #         id_selector = faiss.IDSelectorArray(index)
+    #         scores, idx_image = index_choosed.search(text_features, k=k,
+    #                                                 params=faiss.SearchParametersIVF(sel=id_selector))
+    #     idx_image = idx_image.flatten()
+
+    #     # Get query info and filter out None values
+    #     infos_query = [self.id2img_fps.get(idx) for idx in list(idx_image)]
+    #     infos_query = [info for info in infos_query if info is not None]
+
+    #     # Extract the file IDs from the URLs in frame_path
+    #     def extract_file_id_from_url(url):
+    #         if not url:
+    #             return None
+    #         try:
+    #             # Extract file ID from Google Drive URL
+    #             file_id = url.split('id=')[-1]
+    #             return file_id
+    #         except:
+    #             logging.error(f"Could not extract file ID from URL: {url}")
+    #             return None
+
+    #     image_paths = []
+    #     for info in infos_query:
+    #         if info and 'frame_path' in info:
+    #             file_id = extract_file_id_from_url(info['frame_path'])
+    #             if file_id:
+    #                 image_paths.append(file_id)
+
+    #     return scores.flatten(), idx_image, infos_query, image_paths
+
     def text_search(self, text, index, k, model_type):
-        logging.info(
-            f"Performing text search with query: '{text}', model: {model_type}, k: {k}")
-        # text = self.translater(text)
-        logging.info(f"Translated text: '{text}'")
+        logging.info(f"Performing text search with query: '{text}', model: {model_type}, k: {k}")
 
         if model_type == 'clip':
             text = clip.tokenize([text]).to(self.__device)
@@ -279,17 +316,27 @@ class MyFaiss:
         if index is None:
             scores, idx_image = index_choosed.search(text_features, k=k)
         else:
-            logging.info(f"Using custom index with {len(index)} items")
             id_selector = faiss.IDSelectorArray(index)
             scores, idx_image = index_choosed.search(text_features, k=k,
                                                     params=faiss.SearchParametersIVF(sel=id_selector))
         idx_image = idx_image.flatten()
-
+        
+        # Convert indices to match your JSON keys
+        # Assuming your JSON keys are sequential from 0 to N
+        max_idx = max(int(k) for k in self.id2img_fps.keys())
+        idx_image = idx_image % (max_idx + 1)  # Wrap around to stay within valid indices
+        
         # Get query info and filter out None values
-        infos_query = [self.id2img_fps.get(idx) for idx in list(idx_image)]
+        infos_query = [self.id2img_fps.get(str(idx)) for idx in list(idx_image)]
         infos_query = [info for info in infos_query if info is not None]
 
-        # Instead of returning local paths, return Google Drive file IDs
-        image_file_ids = [info['frame_path'] for info in infos_query if info and 'frame_path' in info]
+        # Extract URLs and convert to file IDs
+        image_paths = []
+        for info in infos_query:
+            if info and 'frame_path' in info:
+                url = info['frame_path']
+                if 'id=' in url:
+                    file_id = url.split('id=')[-1]
+                    image_paths.append(file_id)
         
-        return scores.flatten(), idx_image, infos_query, image_file_ids
+        return scores.flatten(), idx_image, infos_query, image_paths

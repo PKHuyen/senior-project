@@ -295,36 +295,27 @@ class StreamlitImageSearch:
             st.sidebar.code(self.drive_manager.dictionary_id)
 
             # Path inputs in sidebar with default values
-            bin_clip_file = st.sidebar.text_input(
-                "CLIP Binary File ID", 
-                value='1XsdUu-NTVbgXt-ch_OdohsNQyHLdtwHN'
-            )
-            bin_clipv2_file = st.sidebar.text_input(
-                "CLIPv2 Binary File ID", 
-                value='1RPKwzzgWqT68rWFEO2xSwLOuAaboVEJu'
-            )
-            json_path = st.sidebar.text_input(
-                "JSON File ID", 
-                value='1ZM-q1El6oV18hpzBIJjwNCDrEhvOx6s2'
-            )
+            # bin_clip_file = st.sidebar.text_input(
+            #     "CLIP Binary File ID", 
+            #     value='1XsdUu-NTVbgXt-ch_OdohsNQyHLdtwHN'
+            # )
+            # bin_clipv2_file = st.sidebar.text_input(
+            #     "CLIPv2 Binary File ID", 
+            #     value='1RPKwzzgWqT68rWFEO2xSwLOuAaboVEJu'
+            # )
+            # json_path = st.sidebar.text_input(
+            #     "JSON File ID", 
+            #     value='1ZM-q1El6oV18hpzBIJjwNCDrEhvOx6s2'
+            # )
+
+            bin_clip_file = '1XsdUu-NTVbgXt-ch_OdohsNQyHLdtwHN'
+            bin_clipv2_file = '1RPKwzzgWqT68rWFEO2xSwLOuAaboVEJu'
+            json_path = '1ZM-q1El6oV18hpzBIJjwNCDrEhvOx6s2'
 
             # Validate Google Drive files
             files, json_files = self.drive_manager.list_files()
             file_ids = [file['id'] for file in files]
-            
-            for path, name in [(bin_clip_file, "CLIP Binary"), 
-                            (bin_clipv2_file, "CLIPv2 Binary"), 
-                            (json_path, "JSON")]:
-                if path in file_ids:
-                    st.sidebar.success(f"{name} found with ID: {path}")
-                else:
-                    st.sidebar.warning(f"{name} not found in Drive folder")
-
-            # If the JSON file is inside the 'annotation' subfolder
-            if json_files:
-                st.sidebar.success(f"JSON found with ID: {json_files[0]['id']}")
-                json_path = json_files[0]['id']  # Assign the correct path
-
+        
             # Initialize search engine with Drive service
             self.search_engine = MyFaiss(
                 bin_clip_file=bin_clip_file,
@@ -340,43 +331,25 @@ class StreamlitImageSearch:
             import traceback
             st.code(traceback.format_exc())
 
-    def load_and_display_images(self, image_ids: List[str], scores: List[float]):
-        """Load and display images from Google Drive in a grid layout"""
+    def load_and_display_images(self, file_ids: List[str], scores: List[float]):
         cols = st.columns(3)  # Create 3 columns for grid layout
 
-        for idx, (image_id, score) in enumerate(zip(image_ids, scores)):
+        for idx, (file_id, score) in enumerate(zip(file_ids, scores)):
             try:
                 col_idx = idx % 3
                 with cols[col_idx]:
                     # Download image from Google Drive
-                    image = self.drive_manager.download_file_from_drive(image_id)
+                    image = self.drive_manager.download_file_from_drive(file_id)
                     
                     if image:
                         st.image(image, caption=f"Score: {score:.4f}")
                         with st.expander("Image Details"):
-                            st.text(f"Google Drive File ID: {image_id}")
+                            st.text(f"Google Drive File ID: {file_id}")
+                            st.text(f"Share URL: https://drive.google.com/uc?id={file_id}")
                     else:
-                        st.warning(f"Image not found with ID: {image_id}")
+                        st.warning(f"Could not load image with ID: {file_id}")
             except Exception as e:
-                st.error(f"Error loading image {image_id}: {str(e)}")
-
-    # def load_and_display_images(self, image_paths: List[str], scores: List[float]):
-    #     cols = st.columns(3)  # Create 3 columns for grid layout
-
-    #     for idx, (image_path, score) in enumerate(zip(image_paths, scores)):
-    #         try:
-    #             col_idx = idx % 3
-    #             with cols[col_idx]:
-    #                 if image_path.startswith('http'):
-    #                     # Directly embed the URL
-    #                     st.image(image_path, caption=f"Score: {score:.4f}")
-    #                     with st.expander("Image Details"):
-    #                         st.text(f"Original Path: {image_path}")
-    #                 else:
-    #                     # Handle as local file path (optional)
-    #                     st.warning(f"Path not recognized as a valid URL: {image_path}")
-    #         except Exception as e:
-    #             st.error(f"Error displaying image {image_path}: {str(e)}")
+                st.error(f"Error loading image {file_id}: {str(e)}")
 
     def run(self):
         """Run the Streamlit application"""
