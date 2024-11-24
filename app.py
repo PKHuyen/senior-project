@@ -1,12 +1,24 @@
 import streamlit as st
 from PIL import Image
 import io
+import os,sys
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaIoBaseDownload
 import logging
 from typing import List, Tuple
+from database_processing.faiss_processing import MyFaiss
+
+# Configure logging
+logging.basicConfig(level=logging.INFO,
+                   format='%(asctime)s - %(levelname)s - %(message)s')
+
+# Add the project root to Python path for imports
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(PROJECT_ROOT)
+
+# Import the MyFaiss class and Translation from your backend
 from database_processing.faiss_processing import MyFaiss
 
 SCOPES = 'https://www.googleapis.com/auth/drive'
@@ -28,7 +40,6 @@ class GoogleDriveKeyframeManager:
 
     def list_files(self):
         try:
-            # List all files in the main directory and its subfolders
             results = self.service.files().list(
                 q=f"'{self.dictionary_id}' in parents", 
                 spaces='drive',
@@ -42,7 +53,6 @@ class GoogleDriveKeyframeManager:
         except HttpError as error:
             st.error(f'An error occurred: {error}')
             return [], []
-
 
     def download_file_from_drive(self, file_id):
         try:
@@ -70,8 +80,8 @@ def initialize_search_engine(drive_service):
             )
             return True
         except Exception as e:
-            st.error(f"Error initializing search engine: {str(e)}")
-            logging.error(f"Search engine initialization error: {str(e)}")
+            # st.error(f"Error initializing search engine: {str(e)}")
+            # logging.error(f"Search engine initialization error: {str(e)}")
             return False
     return True
 
@@ -92,8 +102,6 @@ class StreamlitImageSearch:
     def setup_faiss(self):
         try:
             st.sidebar.header("Google Drive Configuration")
-            st.sidebar.markdown("**Dictionary:**")
-            st.sidebar.code(self.drive_manager.dictionary_id)
 
             bin_clip_file = '1XsdUu-NTVbgXt-ch_OdohsNQyHLdtwHN'
             bin_clipv2_file = '1RPKwzzgWqT68rWFEO2xSwLOuAaboVEJu'
@@ -112,17 +120,18 @@ class StreamlitImageSearch:
             st.sidebar.success("Search engine initialized successfully!")
             
         except Exception as e:
-            st.error(f"Error initializing FAISS search engine: {str(e)}")
+            # st.error(f"Error initializing FAISS search engine: {str(e)}")
             import traceback
-            st.code(traceback.format_exc())
+            traceback.format_exc()
 
     def load_and_display_images(self, file_ids: List[str], scores: List[float]):
-        cols = st.columns(3)
+        cols = st.columns(3)  # Create 3 columns for grid layout
 
         for idx, (file_id, score) in enumerate(zip(file_ids, scores)):
             try:
                 col_idx = idx % 3
                 with cols[col_idx]:
+                    # Download image from Google Drive
                     image = self.drive_manager.download_file_from_drive(file_id)
                     
                     if image:
@@ -143,20 +152,15 @@ class StreamlitImageSearch:
         Enter your query below to find matching images.
         """)
 
-        # Sidebar configurations
         st.sidebar.header("Search Settings")
         k_results = st.sidebar.slider("Number of results", 1, 20, 9)
         model_type = st.sidebar.selectbox("Model Type", ["clip", "clip_v2"])
 
-        # Example queries
         example_queries = {
             "Scene Description": "Two news anchors in a television studio with a cityscape background",
             "Object Query": "yellow umbrella",
             "Action Query": "people walking on the street",
         }
-
-        # Main search interface
-        st.markdown("### Enter your search query")
         
         # Query input with example selection
         selected_example = st.selectbox(
@@ -164,6 +168,8 @@ class StreamlitImageSearch:
             ["Custom Query"] + list(example_queries.keys())
         )
         
+        st.markdown("### Enter your search query")
+
         if selected_example == "Custom Query":
             query = st.text_area(
                 "Describe what you're looking for:",

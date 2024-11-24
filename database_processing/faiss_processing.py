@@ -148,6 +148,11 @@ class MyFaiss:
         idx_image = idx_image % (max_idx + 1) 
         
         infos_query = [self.id2img_fps.get(str(idx)) for idx in list(idx_image)]
+        
+        max_idx = max(int(k) for k in self.id2img_fps.keys())
+        idx_image = idx_image % (max_idx + 1) 
+        
+        infos_query = [self.id2img_fps.get(str(idx)) for idx in list(idx_image)]
         infos_query = [info for info in infos_query if info is not None]
 
         image_paths = []
