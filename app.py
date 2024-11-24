@@ -9,7 +9,7 @@ from googleapiclient.http import MediaIoBaseDownload
 import logging
 from typing import List, Tuple
 from database_processing.faiss_processing import MyFaiss
-
+import tempfile, json
 # Configure logging
 logging.basicConfig(level=logging.INFO,
                    format='%(asctime)s - %(levelname)s - %(message)s')
@@ -22,8 +22,8 @@ sys.path.append(PROJECT_ROOT)
 from database_processing.faiss_processing import MyFaiss
 
 SCOPES = 'https://www.googleapis.com/auth/drive'
-CLIENT_SECRET = 'credentials.json'
 keyframes_dir_id = '1bqJG0CRIIuVIib3pBcA2k8iiRyWlwmq9'
+
 class GoogleDriveKeyframeManager:
     def __init__(self, dictionary_id='1l5D8idS8nXKD_E5A0SlM5ok2bE1iMrF1'):
         self.dictionary_id = dictionary_id
@@ -32,11 +32,37 @@ class GoogleDriveKeyframeManager:
         self.service = st.session_state["drive_service"]
 
     def authenticate_google_drive(self):
-        """Authenticate and create Google Drive service"""
-        flow = InstalledAppFlow.from_client_secrets_file(CLIENT_SECRET, SCOPES)
-        creds = flow.run_local_server(port=8502)
-        service = build('drive', 'v3', credentials=creds)
-        return service
+        """Authenticate and create Google Drive service using Streamlit secrets"""
+        try:
+            # Create a temporary credentials file from secrets
+            with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.json') as f:
+                credentials_dict = {
+                    "web": {
+                        "client_id": st.secrets["google_credentials"]["client_id"],
+                        "project_id": st.secrets["google_credentials"]["project_id"],
+                        "auth_uri": st.secrets["google_credentials"]["auth_uri"],
+                        "token_uri": st.secrets["google_credentials"]["token_uri"],
+                        "auth_provider_x509_cert_url": st.secrets["google_credentials"]["auth_provider_x509_cert_url"],
+                        "client_secret": st.secrets["google_credentials"]["client_secret"],
+                        "redirect_uris": st.secrets["google_credentials"]["redirect_uris"]
+                    }
+                }
+                json.dump(credentials_dict, f)
+                temp_credentials_path = f.name
+
+            # Use the temporary credentials file
+            flow = InstalledAppFlow.from_client_secrets_file(temp_credentials_path, SCOPES)
+            creds = flow.run_local_server(port=8502)
+            service = build('drive', 'v3', credentials=creds)
+
+            # Clean up the temporary file
+            os.unlink(temp_credentials_path)
+            
+            return service
+            
+        except Exception as e:
+            st.error(f"Authentication error: {str(e)}")
+            return None
 
     def list_files(self):
         try:

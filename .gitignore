@@ -4,3 +4,4 @@ node_modules
 */__pycache__
 __pycache__
 credentials.json
+.streamlit/secrets.toml
