@@ -228,7 +228,9 @@ keyframes_dir_id = '1bqJG0CRIIuVIib3pBcA2k8iiRyWlwmq9'
 class GoogleDriveKeyframeManager:
     def __init__(self, dictionary_id='1l5D8idS8nXKD_E5A0SlM5ok2bE1iMrF1'):
         self.dictionary_id = dictionary_id
-        self.service = self.authenticate_google_drive()
+        if "drive_service" not in st.session_state:
+            st.session_state["drive_service"] = self.authenticate_google_drive()
+        self.service = st.session_state["drive_service"]
 
     def authenticate_google_drive(self):
         """Authenticate and create Google Drive service"""
@@ -256,7 +258,6 @@ class GoogleDriveKeyframeManager:
 
 
     def download_file_from_drive(self, file_id):
-        """Download a file from Google Drive"""
         try:
             request = self.service.files().get_media(fileId=file_id)
             file = io.BytesIO()
@@ -358,6 +359,24 @@ class StreamlitImageSearch:
                         st.warning(f"Image not found with ID: {image_id}")
             except Exception as e:
                 st.error(f"Error loading image {image_id}: {str(e)}")
+
+    # def load_and_display_images(self, image_paths: List[str], scores: List[float]):
+    #     cols = st.columns(3)  # Create 3 columns for grid layout
+
+    #     for idx, (image_path, score) in enumerate(zip(image_paths, scores)):
+    #         try:
+    #             col_idx = idx % 3
+    #             with cols[col_idx]:
+    #                 if image_path.startswith('http'):
+    #                     # Directly embed the URL
+    #                     st.image(image_path, caption=f"Score: {score:.4f}")
+    #                     with st.expander("Image Details"):
+    #                         st.text(f"Original Path: {image_path}")
+    #                 else:
+    #                     # Handle as local file path (optional)
+    #                     st.warning(f"Path not recognized as a valid URL: {image_path}")
+    #         except Exception as e:
+    #             st.error(f"Error displaying image {image_path}: {str(e)}")
 
     def run(self):
         """Run the Streamlit application"""
