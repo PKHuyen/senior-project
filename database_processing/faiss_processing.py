@@ -28,15 +28,89 @@ class MyFaiss:
         self.clipv2_tokenizer = open_clip.get_tokenizer('ViT-L-14')
         logging.info("MyFaiss initialization complete")
 
-    def load_json_file(self, json_path: str):
-        logging.info(f"Loading JSON file: {json_path}")
-        with open(json_path, 'r') as f:
-            js = json.load(f)
-        return {int(k): v for k, v in js.items()}
+    def load_bin_file(self, bin_file):
+        # If it's a BytesIO object, use it directly
+        if isinstance(bin_file, BytesIO):
+            with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+                temp_file.write(bin_file.read())
+                temp_file_path = temp_file.name
+            return faiss.read_index(temp_file_path)
+        
+        # If it's a file path, use it directly
+        if os.path.exists(bin_file):
+            return faiss.read_index(bin_file)
+        
+        # If it's a Google Drive file ID
+        if self.drive_service:
+            return self.load_bin_file_from_drive(bin_file)
+        
+        raise ValueError(f"Cannot load binary file: {bin_file}")
 
-    def load_bin_file(self, bin_file: str):
-        logging.info(f"Loading bin file: {bin_file}")
-        return faiss.read_index(bin_file)
+    def load_bin_file_from_drive(self, file_id):
+        try:
+            file_metadata = self.drive_service.files().get(fileId=file_id).execute()
+            
+            mime_type = file_metadata.get('mimeType')
+            
+            if mime_type in ['application/vnd.google-apps.document', 
+                            'application/vnd.google-apps.spreadsheet', 
+                            'application/vnd.google-apps.presentation']:
+                export_mime_type = 'application/pdf' 
+                request = self.drive_service.files().export_media(fileId=file_id, mimeType=export_mime_type)
+            else:
+                request = self.drive_service.files().get_media(fileId=file_id)
+
+            # Download the file to a BytesIO object
+            file = BytesIO()
+            downloader = MediaIoBaseDownload(file, request)
+            done = False
+            while done is False:
+                status, done = downloader.next_chunk()
+
+            file.seek(0)
+            
+            # Save to a temporary file and read it using FAISS
+            with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+                temp_file.write(file.read())
+                temp_file_path = temp_file.name
+            
+            return faiss.read_index(temp_file_path)
+            
+        except HttpError as error:
+            logging.error(f"Error loading bin file from Drive: {error}")
+            raise
+
+    def load_json_file(self, json_path):
+        # If it's a BytesIO object, use it directly
+        if isinstance(json_path, BytesIO):
+            json_path.seek(0)
+            data = json.load(json_path)
+        # If it's a file path, use it directly
+        elif os.path.exists(json_path):
+            with open(json_path, 'r') as f:
+                data = json.load(f)
+        # If it's a Google Drive file ID
+        elif self.drive_service:
+            data = self.load_json_file_from_drive(json_path)
+        else:
+            raise ValueError(f"Cannot load JSON file: {json_path}")
+        
+        return {str(k): v for k, v in data.items()}
+
+    def load_json_file_from_drive(self, file_id):
+        try:
+            request = self.drive_service.files().get_media(fileId=file_id)
+            file = BytesIO()
+            downloader = MediaIoBaseDownload(file, request)
+            done = False
+            while done is False:
+                status, done = downloader.next_chunk()
+            
+            file.seek(0)
+            return json.load(file)
+        except Exception as e:
+            logging.error(f"Error loading JSON file from Drive: {e}")
+            raise
 
     def text_search(self, text, index, k, model_type):
         logging.info(
@@ -64,9 +138,11 @@ class MyFaiss:
             scores, idx_image = index_choosed.search(text_features, k=k,
                                                     params=faiss.SearchParametersIVF(sel=id_selector))
         idx_image = idx_image.flatten()
-
-        # Get query info and filter out None values
-        infos_query = [self.id2img_fps.get(idx) for idx in list(idx_image)]
+        
+        max_idx = max(int(k) for k in self.id2img_fps.keys())
+        idx_image = idx_image % (max_idx + 1) 
+        
+        infos_query = [self.id2img_fps.get(str(idx)) for idx in list(idx_image)]
         infos_query = [info for info in infos_query if info is not None]
 
         # Check if 'frame_path' key exists and is not None
