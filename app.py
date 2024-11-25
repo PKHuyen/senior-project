@@ -10,6 +10,10 @@ import logging
 from typing import List, Tuple
 from database_processing.faiss_processing import MyFaiss
 import tempfile, json
+import traceback
+from google.oauth2.credentials import Credentials
+import asyncio
+
 # Configure logging
 logging.basicConfig(level=logging.INFO,
                    format='%(asctime)s - %(levelname)s - %(message)s')
@@ -144,23 +148,52 @@ class GoogleDriveKeyframeManager:
             st.error(f'An error occurred: {error}')
             return None
 
+# def initialize_search_engine(drive_service):
+#     if 'search_engine' not in st.session_state:
+#         try:
+#             st.session_state.search_engine = MyFaiss(
+#                 bin_clip_file = '1XsdUu-NTVbgXt-ch_OdohsNQyHLdtwHN',
+#                 bin_clipv2_file = '1RPKwzzgWqT68rWFEO2xSwLOuAaboVEJu',
+#                 json_path = '1ZM-q1El6oV18hpzBIJjwNCDrEhvOx6s2',
+#                 drive_service=drive_service
+#             )
+#             return True
+#         except Exception as e:
+#             # st.error(f"Error initializing search engine: {str(e)}")
+#             # logging.error(f"Search engine initialization error: {str(e)}")
+#             return False
+#     return True
+
 def initialize_search_engine(drive_service):
     if 'search_engine' not in st.session_state:
         try:
+            logging.info("Starting search engine initialization...")
             st.session_state.search_engine = MyFaiss(
                 bin_clip_file = '1XsdUu-NTVbgXt-ch_OdohsNQyHLdtwHN',
                 bin_clipv2_file = '1RPKwzzgWqT68rWFEO2xSwLOuAaboVEJu',
                 json_path = '1ZM-q1El6oV18hpzBIJjwNCDrEhvOx6s2',
                 drive_service=drive_service
             )
+            logging.info("Search engine initialization complete")
             return True
         except Exception as e:
-            # st.error(f"Error initializing search engine: {str(e)}")
-            # logging.error(f"Search engine initialization error: {str(e)}")
+            logging.error(f"Search engine initialization error: {str(e)}")
             return False
     return True
 
 class StreamlitImageSearch:
+    # def __init__(self):
+    #     st.set_page_config(
+    #         page_title="Image Search Engine",
+    #         page_icon="🔍",
+    #         layout="wide"
+    #     )
+        
+    #     self.drive_manager = GoogleDriveKeyframeManager()
+    #     if not initialize_search_engine(self.drive_manager.service):
+    #         st.stop()
+        
+    #     self.setup_faiss()
     def __init__(self):
         st.set_page_config(
             page_title="Image Search Engine",
@@ -168,36 +201,57 @@ class StreamlitImageSearch:
             layout="wide"
         )
         
-        self.drive_manager = GoogleDriveKeyframeManager()
-        if not initialize_search_engine(self.drive_manager.service):
+        try:
+            self.drive_manager = GoogleDriveKeyframeManager()
+            if not initialize_search_engine(self.drive_manager.service):
+                st.error("Failed to initialize search engine")
+                st.stop()
+            
+            self.setup_faiss()
+        except Exception as e:
+            st.error(f"Initialization error: {str(e)}")
+            logging.error(traceback.format_exc())
             st.stop()
-        
-        self.setup_faiss()
 
+    # def setup_faiss(self):
+    #     try:
+    #         st.sidebar.header("Google Drive Configuration")
+
+    #         bin_clip_file = '1XsdUu-NTVbgXt-ch_OdohsNQyHLdtwHN'
+    #         bin_clipv2_file = '1RPKwzzgWqT68rWFEO2xSwLOuAaboVEJu'
+    #         json_path = '1ZM-q1El6oV18hpzBIJjwNCDrEhvOx6s2'
+
+    #         files, json_files = self.drive_manager.list_files()
+    #         file_ids = [file['id'] for file in files]
+        
+    #         self.search_engine = MyFaiss(
+    #             bin_clip_file=bin_clip_file,
+    #             bin_clipv2_file=bin_clipv2_file,
+    #             json_path=json_path,
+    #             drive_service=self.drive_manager.service
+    #         )
+            
+    #         st.sidebar.success("Search engine initialized successfully!")
+            
+    #     except Exception as e:
+    #         # st.error(f"Error initializing FAISS search engine: {str(e)}")
+    #         import traceback
+    #         traceback.format_exc()
     def setup_faiss(self):
         try:
             st.sidebar.header("Google Drive Configuration")
-
-            bin_clip_file = '1XsdUu-NTVbgXt-ch_OdohsNQyHLdtwHN'
-            bin_clipv2_file = '1RPKwzzgWqT68rWFEO2xSwLOuAaboVEJu'
-            json_path = '1ZM-q1El6oV18hpzBIJjwNCDrEhvOx6s2'
-
+            
             files, json_files = self.drive_manager.list_files()
             file_ids = [file['id'] for file in files]
-        
-            self.search_engine = MyFaiss(
-                bin_clip_file=bin_clip_file,
-                bin_clipv2_file=bin_clipv2_file,
-                json_path=json_path,
-                drive_service=self.drive_manager.service
-            )
+            
+            # Remove duplicate initialization since we already have it in initialize_search_engine
+            self.search_engine = st.session_state.search_engine
             
             st.sidebar.success("Search engine initialized successfully!")
             
         except Exception as e:
-            # st.error(f"Error initializing FAISS search engine: {str(e)}")
-            import traceback
-            traceback.format_exc()
+            logging.error(f"Error in setup_faiss: {str(e)}")
+            logging.error(traceback.format_exc())
 
     def load_and_display_images(self, file_ids: List[str], scores: List[float]):
         cols = st.columns(3)  # Create 3 columns for grid layout
@@ -293,9 +347,20 @@ class StreamlitImageSearch:
             else:
                 st.warning("Please enter a search query")
 
+# def main():
+#     app = StreamlitImageSearch()
+#     app.run()
 def main():
-    app = StreamlitImageSearch()
-    app.run()
+    try:
+        app = StreamlitImageSearch()
+        app.run()
+    except Exception as e:
+        st.error(f"Application error: {str(e)}")
+        logging.error(traceback.format_exc())
+    finally:
+        # Cleanup any resources if needed
+        if 'search_engine' in st.session_state:
+            del st.session_state['search_engine']
 
 if __name__ == "__main__":
     main()
