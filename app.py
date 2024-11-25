@@ -35,10 +35,89 @@ class GoogleDriveKeyframeManager:
             st.session_state["drive_service"] = self.authenticate_google_drive()
         self.service = st.session_state["drive_service"]
 
+    # def authenticate_google_drive(self):
+    #     """Authenticate and create Google Drive service using Streamlit secrets"""
+    #     try:
+    #         # Check if we have stored credentials in session state
+    #         if 'google_oauth_credentials' in st.session_state:
+    #             credentials = Credentials.from_authorized_user_info(
+    #                 st.session_state['google_oauth_credentials'],
+    #                 SCOPES
+    #             )
+    #             return build('drive', 'v3', credentials=credentials)
+
+    #         # Create a temporary credentials file from secrets
+    #         with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.json') as f:
+    #             credentials_dict = {
+    #                 "web": {
+    #                     "client_id": st.secrets["google_credentials"]["client_id"],
+    #                     "project_id": st.secrets["google_credentials"]["project_id"],
+    #                     "auth_uri": st.secrets["google_credentials"]["auth_uri"],
+    #                     "token_uri": st.secrets["google_credentials"]["token_uri"],
+    #                     "auth_provider_x509_cert_url": st.secrets["google_credentials"]["auth_provider_x509_cert_url"],
+    #                     "client_secret": st.secrets["google_credentials"]["client_secret"],
+    #                     "redirect_uris": st.secrets["google_credentials"]["redirect_uris"]
+    #                 }
+    #             }
+    #             json.dump(credentials_dict, f)
+    #             temp_credentials_path = f.name
+
+    #         # Set up OAuth flow
+    #         flow = InstalledAppFlow.from_client_secrets_file(
+    #             temp_credentials_path,
+    #             SCOPES,
+    #             redirect_uri=st.secrets["google_credentials"]["redirect_uris"][0]
+    #         )
+
+    #         # Create authorization URL
+    #         auth_url, _ = flow.authorization_url(prompt='consent')
+
+    #         # Show the authorization URL to the user
+    #         st.markdown("""
+    #         ### Google Drive Authentication Required
+    #         1. Click the link below to authorize this application
+    #         2. After authorization, copy the entire URL from your browser
+    #         3. Paste it back here and click 'Submit'
+    #         """)
+    #         st.markdown(f"[Click here to authorize]({auth_url})", unsafe_allow_html=True)
+            
+    #         auth_code = st.text_input('Paste the full URL here:')
+            
+    #         if st.button('Submit'):
+    #             try:
+    #                 # Extract the authorization code from the full URL
+    #                 flow.fetch_token(authorization_response=auth_code)
+    #                 credentials = flow.credentials
+                    
+    #                 # Store credentials in session state
+    #                 st.session_state['google_oauth_credentials'] = {
+    #                     'token': credentials.token,
+    #                     'refresh_token': credentials.refresh_token,
+    #                     'token_uri': credentials.token_uri,
+    #                     'client_id': credentials.client_id,
+    #                     'client_secret': credentials.client_secret,
+    #                     'scopes': credentials.scopes
+    #                 }
+                    
+    #                 # Clean up the temporary file
+    #                 os.unlink(temp_credentials_path)
+                    
+    #                 service = build('drive', 'v3', credentials=credentials)
+    #                 st.success('Successfully authenticated with Google Drive!')
+    #                 st.experimental_rerun()
+    #                 return service
+    #             except Exception as e:
+    #                 st.error(f'Authentication error: {str(e)}')
+    #                 return None
+
+    #         # If we haven't completed authentication, stop the app
+    #         st.stop()
+
+    #     except Exception as e:
+    #         st.error(f"Authentication error: {str(e)}")
+    #         return None
     def authenticate_google_drive(self):
-        """Authenticate and create Google Drive service using Streamlit secrets"""
         try:
-            # Check if we have stored credentials in session state
             if 'google_oauth_credentials' in st.session_state:
                 credentials = Credentials.from_authorized_user_info(
                     st.session_state['google_oauth_credentials'],
@@ -46,7 +125,6 @@ class GoogleDriveKeyframeManager:
                 )
                 return build('drive', 'v3', credentials=credentials)
 
-            # Create a temporary credentials file from secrets
             with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.json') as f:
                 credentials_dict = {
                     "web": {
@@ -62,17 +140,18 @@ class GoogleDriveKeyframeManager:
                 json.dump(credentials_dict, f)
                 temp_credentials_path = f.name
 
-            # Set up OAuth flow
-            flow = InstalledAppFlow.from_client_secrets_file(
-                temp_credentials_path,
-                SCOPES,
-                redirect_uri=st.secrets["google_credentials"]["redirect_uris"][0]
-            )
-
-            # Create authorization URL
+            # Store flow in session state to maintain state
+            if 'oauth_flow' not in st.session_state:
+                flow = InstalledAppFlow.from_client_secrets_file(
+                    temp_credentials_path,
+                    SCOPES,
+                    redirect_uri=st.secrets["google_credentials"]["redirect_uris"][0]
+                )
+                st.session_state['oauth_flow'] = flow
+            
+            flow = st.session_state['oauth_flow']
             auth_url, _ = flow.authorization_url(prompt='consent')
 
-            # Show the authorization URL to the user
             st.markdown("""
             ### Google Drive Authentication Required
             1. Click the link below to authorize this application
@@ -85,11 +164,9 @@ class GoogleDriveKeyframeManager:
             
             if st.button('Submit'):
                 try:
-                    # Extract the authorization code from the full URL
                     flow.fetch_token(authorization_response=auth_code)
                     credentials = flow.credentials
                     
-                    # Store credentials in session state
                     st.session_state['google_oauth_credentials'] = {
                         'token': credentials.token,
                         'refresh_token': credentials.refresh_token,
@@ -99,7 +176,6 @@ class GoogleDriveKeyframeManager:
                         'scopes': credentials.scopes
                     }
                     
-                    # Clean up the temporary file
                     os.unlink(temp_credentials_path)
                     
                     service = build('drive', 'v3', credentials=credentials)
@@ -110,13 +186,11 @@ class GoogleDriveKeyframeManager:
                     st.error(f'Authentication error: {str(e)}')
                     return None
 
-            # If we haven't completed authentication, stop the app
             st.stop()
 
         except Exception as e:
             st.error(f"Authentication error: {str(e)}")
             return None
-
     def list_files(self):
         try:
             results = self.service.files().list(
