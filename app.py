@@ -31,35 +31,67 @@ class GoogleDriveKeyframeManager:
             st.session_state["drive_service"] = self.authenticate_google_drive()
         self.service = st.session_state["drive_service"]
 
+    # def authenticate_google_drive(self):
+    #     """Authenticate and create Google Drive service using Streamlit secrets"""
+    #     try:
+    #         # Create a temporary credentials file from secrets
+    #         with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.json') as f:
+    #             credentials_dict = {
+    #                 "web": {
+    #                     "client_id": st.secrets["google_credentials"]["client_id"],
+    #                     "project_id": st.secrets["google_credentials"]["project_id"],
+    #                     "auth_uri": st.secrets["google_credentials"]["auth_uri"],
+    #                     "token_uri": st.secrets["google_credentials"]["token_uri"],
+    #                     "auth_provider_x509_cert_url": st.secrets["google_credentials"]["auth_provider_x509_cert_url"],
+    #                     "client_secret": st.secrets["google_credentials"]["client_secret"],
+    #                     "redirect_uris": st.secrets["google_credentials"]["redirect_uris"]
+    #                 }
+    #             }
+    #             json.dump(credentials_dict, f)
+    #             temp_credentials_path = f.name
+
+    #         # Use the temporary credentials file
+    #         flow = InstalledAppFlow.from_client_secrets_file(temp_credentials_path, SCOPES)
+    #         creds = flow.run_local_server(port=8502)
+    #         service = build('drive', 'v3', credentials=creds)
+
+    #         # Clean up the temporary file
+    #         os.unlink(temp_credentials_path)
+            
+    #         return service
+            
+    #     except Exception as e:
+    #         st.error(f"Authentication error: {str(e)}")
+    #         return None
     def authenticate_google_drive(self):
-        """Authenticate and create Google Drive service using Streamlit secrets"""
+        """Authenticate using service account credentials"""
         try:
-            # Create a temporary credentials file from secrets
-            with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.json') as f:
-                credentials_dict = {
-                    "web": {
-                        "client_id": st.secrets["google_credentials"]["client_id"],
-                        "project_id": st.secrets["google_credentials"]["project_id"],
-                        "auth_uri": st.secrets["google_credentials"]["auth_uri"],
-                        "token_uri": st.secrets["google_credentials"]["token_uri"],
-                        "auth_provider_x509_cert_url": st.secrets["google_credentials"]["auth_provider_x509_cert_url"],
-                        "client_secret": st.secrets["google_credentials"]["client_secret"],
-                        "redirect_uris": st.secrets["google_credentials"]["redirect_uris"]
-                    }
-                }
-                json.dump(credentials_dict, f)
-                temp_credentials_path = f.name
+            from google.oauth2.credentials import Credentials
+            from google.oauth2 import service_account
 
-            # Use the temporary credentials file
-            flow = InstalledAppFlow.from_client_secrets_file(temp_credentials_path, SCOPES)
-            creds = flow.run_local_server(port=8502)
-            service = build('drive', 'v3', credentials=creds)
+            # Create credentials from service account info in secrets
+            credentials_info = {
+                "type": "google_credentials",
+                "project_id": st.secrets["google_credentials"]["project_id"],
+                "private_key_id": st.secrets["google_credentials"]["private_key_id"],
+                "private_key": st.secrets["google_credentials"]["private_key"],
+                "client_email": st.secrets["google_credentials"]["client_email"],
+                "client_id": st.secrets["google_credentials"]["client_id"],
+                "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+                "token_uri": "https://oauth2.googleapis.com/token",
+                "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+                "client_x509_cert_url": st.secrets["google_credentials"]["client_x509_cert_url"]
+            }
 
-            # Clean up the temporary file
-            os.unlink(temp_credentials_path)
-            
+            credentials = service_account.Credentials.from_service_account_info(
+                credentials_info,
+                scopes=[SCOPES]
+            )
+
+            # Build and return the service
+            service = build('drive', 'v3', credentials=credentials)
             return service
-            
+                
         except Exception as e:
             st.error(f"Authentication error: {str(e)}")
             return None
