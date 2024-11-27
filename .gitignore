@@ -5,3 +5,4 @@ node_modules
 __pycache__
 credentials.json
 .streamlit/secrets.toml
+test.py
