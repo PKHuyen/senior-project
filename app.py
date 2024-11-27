@@ -72,15 +72,14 @@ class GoogleDriveKeyframeManager:
             # Create credentials from service account info in secrets
             credentials_info = {
                 "type": "google_credentials",
-                "project_id": st.secrets["google_credentials"]["project_id"],
-                "private_key_id": st.secrets["google_credentials"]["private_key_id"],
-                "private_key": st.secrets["google_credentials"]["private_key"],
-                "client_email": st.secrets["google_credentials"]["client_email"],
                 "client_id": st.secrets["google_credentials"]["client_id"],
-                "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-                "token_uri": "https://oauth2.googleapis.com/token",
-                "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-                "client_x509_cert_url": st.secrets["google_credentials"]["client_x509_cert_url"]
+                "project_id": st.secrets["google_credentials"]["project_id"],
+                "auth_uri": st.secrets["google_credentials"]["auth_uri"],
+                "token_uri": st.secrets["google_credentials"]["token_uri"],
+                "auth_provider_x509_cert_url": st.secrets["google_credentials"]["auth_provider_x509_cert_url"],
+                "client_secret": st.secrets["google_credentials"]["client_secret"],
+                "redirect_uris": st.secrets["google_credentials"]["redirect_uris"],
+                "service_account": st.secrets["google_credentials"]["service_account"]
             }
 
             credentials = service_account.Credentials.from_service_account_info(
