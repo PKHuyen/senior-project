@@ -7,15 +7,41 @@ import numpy as np
 import logging
 import tempfile
 import os
+import streamlit as st
 from io import BytesIO
 from googleapiclient.errors import HttpError
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 
+
+# # Configure logging
+# logging.basicConfig(level=logging.INFO,
+#                     format='%(asctime)s - %(levelname)s - %(message)s')
+
+
 # Configure logging
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - %(levelname)s - %(message)s')
+
+# Use st.cache instead of st.cache_resource
+@st.cache_data
+def load_clip_model(_device):
+    """Load CLIP model with caching"""
+    model, _ = clip.load("ViT-B/16", device=_device)
+    return model
+
+@st.cache_data
+def load_clipv2_model(_device):
+    """Load CLIP v2 model with caching"""
+    model, _, _ = open_clip.create_model_and_transforms(
+        'ViT-L-14', 
+        device=_device, 
+        pretrained='datacomp_xl_s13b_b90k'
+    )
+    tokenizer = open_clip.get_tokenizer('ViT-L-14')
+    return model, tokenizer
+
 
 class MyFaiss:
     def __init__(self, bin_clip_file, bin_clipv2_file, json_path, drive_service=None):
