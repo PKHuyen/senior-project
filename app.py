@@ -3,7 +3,7 @@ from PIL import Image
 import io
 import os, sys
 from google.oauth2 import service_account
-from oauth2client.service_account import ServiceAccountCredentials
+# from oauth2client.service_account import ServiceAccountCredentials
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaIoBaseDownload
