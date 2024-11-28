@@ -39,8 +39,8 @@ open_clip_torch
 clip
 faiss-cpu
 pandas
-google-auth-oauthlib==1.1.0
-google-api-python-client==2.108.0
+google-auth-oauthlib
+google-api-python-client
 # Git dependencies
 git+https://github.com/openai/CLIP.git
 
