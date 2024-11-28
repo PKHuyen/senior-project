@@ -3,6 +3,8 @@ from PIL import Image
 import io
 import os, sys
 from google.oauth2 import service_account
+from oauth2client.service_account import ServiceAccountCredentials
+import googleapiclient.discovery
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaIoBaseDownload
@@ -29,11 +31,18 @@ class GoogleDriveKeyframeManager:
         """Authenticate Google Drive using Streamlit secrets service account"""
         try:
             # Use Streamlit secrets for service account credentials
-            credentials = service_account.Credentials.from_service_account_info(
-                st.secrets["google_service_account"], 
-                scopes=[SCOPES]
+            credentials_dict = st.secrets["google_service_account"]
+            
+            credentials = ServiceAccountCredentials.from_json_keyfile_dict(
+                credentials_dict,
+                scopes=['https://www.googleapis.com/auth/drive']
             )
-            service = build('drive', 'v3', credentials=credentials)
+            service = googleapiclient.discovery.build('drive', 'v3', credentials=credentials)
+            # credentials = service_account.Credentials.from_service_account_info(
+            #     st.secrets["google_service_account"], 
+            #     scopes=[SCOPES]
+            # )
+            # service = build('drive', 'v3', credentials=credentials)
             return service
             
         except Exception as e:
