@@ -39,7 +39,6 @@ open_clip_torch
 clip
 faiss-cpu
 pandas
-oauth2client==3.0.0
 google-auth-oauthlib==1.1.0
 google-api-python-client==2.108.0
 # Git dependencies

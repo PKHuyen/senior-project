@@ -4,7 +4,6 @@ import io
 import os, sys
 from google.oauth2 import service_account
 from oauth2client.service_account import ServiceAccountCredentials
-import googleapiclient.discovery
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaIoBaseDownload
@@ -37,12 +36,13 @@ class GoogleDriveKeyframeManager:
                 credentials_dict,
                 scopes=['https://www.googleapis.com/auth/drive']
             )
-            service = googleapiclient.discovery.build('drive', 'v3', credentials=credentials)
-            # credentials = service_account.Credentials.from_service_account_info(
-            #     st.secrets["google_service_account"], 
-            #     scopes=[SCOPES]
-            # )
-            # service = build('drive', 'v3', credentials=credentials)
+            
+            credentials = service_account.Credentials.from_service_account_info(
+                st.secrets["google_service_account"], 
+                scopes=[SCOPES],
+                cache_discovery=False
+            )
+            service = build('drive', 'v3', credentials=credentials)
             return service
             
         except Exception as e:
