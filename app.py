@@ -30,19 +30,19 @@ class GoogleDriveKeyframeManager:
         """Authenticate Google Drive using Streamlit secrets service account"""
         try:
             # Use Streamlit secrets for service account credentials
-            credentials_dict = st.secrets["google_service_account"]
+            # credentials_dict = st.secrets["google_service_account"]
             
-            credentials = ServiceAccountCredentials.from_json_keyfile_dict(
-                credentials_dict,
-                scopes=['https://www.googleapis.com/auth/drive']
-            )
+            # credentials = ServiceAccountCredentials.from_json_keyfile_dict(
+            #     credentials_dict,
+            #     scopes=['https://www.googleapis.com/auth/drive']
+            # )
             
             credentials = service_account.Credentials.from_service_account_info(
                 st.secrets["google_service_account"], 
-                scopes=[SCOPES],
-                cache_discovery=False
-            )
-            service = build('drive', 'v3', credentials=credentials)
+                scopes=[SCOPES]
+           )
+
+            service = build('drive', 'v3', credentials=credentials, cache_discovery=False)
             return service
             
         except Exception as e:
