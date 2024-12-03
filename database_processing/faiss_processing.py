@@ -13,7 +13,6 @@ from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 
-# Configure logging
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -22,12 +21,9 @@ class MyFaiss:
         logging.info("Initializing MyFaiss")
         self.drive_service = drive_service
         
-        # Load binary files 
         self.index_clip = self.load_bin_file(bin_clip_file)
         self.index_clipv2 = self.load_bin_file(bin_clipv2_file)
-        
-        # Load JSON mapping
-        self.id2img_fps = self.load_json_file(json_path)
+        self.annotation = self.load_json_file(json_path)
         
         # Model and device setup
         self.__device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -39,18 +35,13 @@ class MyFaiss:
         logging.info("MyFaiss initialization complete")
 
     def load_bin_file(self, bin_file):
-        # If it's a BytesIO object, use it directly
         if isinstance(bin_file, BytesIO):
             with tempfile.NamedTemporaryFile(delete=False) as temp_file:
                 temp_file.write(bin_file.read())
                 temp_file_path = temp_file.name
             return faiss.read_index(temp_file_path)
-        
-        # If it's a file path, use it directly
         if os.path.exists(bin_file):
             return faiss.read_index(bin_file)
-        
-        # If it's a Google Drive file ID
         if self.drive_service:
             return self.load_bin_file_from_drive(bin_file)
         
@@ -89,21 +80,16 @@ class MyFaiss:
             raise
 
     def load_json_file(self, json_path):
-        # If it's a BytesIO object, use it directly
         if isinstance(json_path, BytesIO):
             json_path.seek(0)
             data = json.load(json_path)
-        # If it's a file path, use it directly
         elif os.path.exists(json_path):
             with open(json_path, 'r') as f:
                 data = json.load(f)
-        # If it's a Google Drive file ID
         elif self.drive_service:
             data = self.load_json_file_from_drive(json_path)
         else:
             raise ValueError(f"Cannot load JSON file: {json_path}")
-        
-        # Make sure keys are strings
         return {str(k): v for k, v in data.items()}
 
     def load_json_file_from_drive(self, file_id):
@@ -144,15 +130,15 @@ class MyFaiss:
                                                     params=faiss.SearchParametersIVF(sel=id_selector))
         idx_image = idx_image.flatten()
         
-        max_idx = max(int(k) for k in self.id2img_fps.keys())
+        max_idx = max(int(k) for k in self.annotation.keys())
         idx_image = idx_image % (max_idx + 1) 
         
-        infos_query = [self.id2img_fps.get(str(idx)) for idx in list(idx_image)]
+        infos_query = [self.annotation.get(str(idx)) for idx in list(idx_image)]
         
-        max_idx = max(int(k) for k in self.id2img_fps.keys())
+        max_idx = max(int(k) for k in self.annotation.keys())
         idx_image = idx_image % (max_idx + 1) 
         
-        infos_query = [self.id2img_fps.get(str(idx)) for idx in list(idx_image)]
+        infos_query = [self.annotation.get(str(idx)) for idx in list(idx_image)]
         infos_query = [info for info in infos_query if info is not None]
 
         image_paths = []

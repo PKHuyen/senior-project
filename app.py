@@ -1,21 +1,16 @@
 import streamlit as st
 from PIL import Image
 import io
-import os, sys
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaIoBaseDownload
 import logging
 from typing import List, Tuple
-import json
+from database_processing.faiss_processing import MyFaiss
 
-# Configure logging
 logging.basicConfig(level=logging.INFO,
                    format='%(asctime)s - %(levelname)s - %(message)s')
-
-# Import the MyFaiss class and Translation from your backend
-from database_processing.faiss_processing import MyFaiss
 
 SCOPES = 'https://www.googleapis.com/auth/drive'
 keyframes_dir_id = '1bqJG0CRIIuVIib3pBcA2k8iiRyWlwmq9'
@@ -28,7 +23,6 @@ class GoogleDriveKeyframeManager:
     def authenticate_google_drive(self):
         """Authenticate Google Drive using Streamlit secrets service account"""
         try:
-            # Use Streamlit secrets for service account credentials
             credentials = service_account.Credentials.from_service_account_info(
                 st.secrets["google_service_account"], 
                 scopes=[SCOPES]
@@ -76,7 +70,7 @@ def initialize_search_engine(drive_service):
         search_engine = MyFaiss(
             bin_clip_file = '1XsdUu-NTVbgXt-ch_OdohsNQyHLdtwHN',
             bin_clipv2_file = '1RPKwzzgWqT68rWFEO2xSwLOuAaboVEJu',
-            json_path = '1ZM-q1El6oV18hpzBIJjwNCDrEhvOx6s2',
+            json_path = '1MlWC1aZ7HHJj_U-48PqTdyYVtlx8GqSE',
             drive_service=drive_service
         )
         return search_engine
@@ -99,13 +93,12 @@ class StreamlitImageSearch:
             st.stop()
 
     def load_and_display_images(self, file_ids: List[str], scores: List[float]):
-        cols = st.columns(3)  # Create 3 columns for grid layout
+        cols = st.columns(3) 
 
         for idx, (file_id, score) in enumerate(zip(file_ids, scores)):
             try:
                 col_idx = idx % 3
                 with cols[col_idx]:
-                    # Download image from Google Drive
                     image = self.drive_manager.download_file_from_drive(file_id)
                     
                     if image:
@@ -119,8 +112,7 @@ class StreamlitImageSearch:
                 st.error(f"Error loading image {file_id}: {str(e)}")
 
     def run(self):
-        """Run the Streamlit application"""
-        st.title("🔍 Multi-Modal Image Search Engine")
+        st.title("🔍 Multi-Model Image Search Engine")
         st.markdown("""
         This application uses CLIP and CLIPv2 models to search for images based on text descriptions.
         Enter your query below to find matching images.
