@@ -32,8 +32,8 @@ class GoogleDriveKeyframeManager:
             
         except Exception as e:
             st.error(f"Authentication error: {str(e)}")
+            logging.error(f"Authentication setup error: {traceback.format_exc()}")
             return None
-
     def list_files(self):
         try:
             results = self.service.files().list(
@@ -65,6 +65,21 @@ class GoogleDriveKeyframeManager:
             st.error(f'An error occurred: {error}')
             return None
 
+# def initialize_search_engine(drive_service):
+#     if 'search_engine' not in st.session_state:
+#         try:
+#             st.session_state.search_engine = MyFaiss(
+#                 bin_clip_file = '1XsdUu-NTVbgXt-ch_OdohsNQyHLdtwHN',
+#                 bin_clipv2_file = '1RPKwzzgWqT68rWFEO2xSwLOuAaboVEJu',
+#                 json_path = '1ZM-q1El6oV18hpzBIJjwNCDrEhvOx6s2',
+#                 drive_service=drive_service
+#             )
+#             return True
+#         except Exception as e:
+#             # st.error(f"Error initializing search engine: {str(e)}")
+#             # logging.error(f"Search engine initialization error: {str(e)}")
+#             return False
+#     return True
 def initialize_search_engine(drive_service):
     try:
         search_engine = MyFaiss(
