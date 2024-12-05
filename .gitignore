@@ -6,3 +6,4 @@ __pycache__
 credentials.json
 .streamlit/secrets.toml
 test.py
+database_processing/.DS_Store
