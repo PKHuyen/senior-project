@@ -8,6 +8,7 @@ from googleapiclient.http import MediaIoBaseDownload
 import logging
 from typing import List, Tuple
 from database_processing.faiss_processing import MyFaiss
+from datetime import timedelta
 
 logging.basicConfig(level=logging.INFO,
                    format='%(asctime)s - %(levelname)s - %(message)s')
@@ -98,7 +99,6 @@ class StreamlitImageSearch:
 
         for idx, (file_id, score, info) in enumerate(zip(file_ids, scores, infos_query)):
             try:
-                print(info)
                 col_idx = idx % 3
                 with cols[col_idx]:
                     image = self.drive_manager.download_file_from_drive(file_id)
@@ -109,7 +109,14 @@ class StreamlitImageSearch:
                             st.text(f"Google Drive File ID: {file_id}")
                             st.text(f"Share URL: https://drive.google.com/uc?id={file_id}")
                             st.text(f"Video ID: {info.get('video_ID', 'N/A')}")
-                            st.text(f"Timestamp: {info.get('timestamp', 'N/A').split('_')[-1]}")
+                           
+                            raw_timestamp = info.get('timestamp', '0').split('_')[-1].split('.')[0]
+                            try:
+                                timestamp_seconds = int(raw_timestamp)  # Ensure it is an integer
+                                formatted_time = str(timedelta(seconds=timestamp_seconds))
+                            except ValueError:
+                                formatted_time = "Invalid timestamp"
+                            st.text(f"Timestamp: {formatted_time}")
                     else:
                         st.warning(f"Could not load image with ID: {file_id}")
             except Exception as e:
