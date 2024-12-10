@@ -109,7 +109,7 @@ class StreamlitImageSearch:
                             st.text(f"Google Drive File ID: {file_id}")
                             st.text(f"Share URL: https://drive.google.com/uc?id={file_id}")
                             st.text(f"Video ID: {info.get('video_ID', 'N/A')}")
-                            st.text(f"Timestamp: {info.get('timestamp', 'N/A')}")
+                            st.text(f"Timestamp: {info.get('timestamp', 'N/A').split('_')[-1]}")
                     else:
                         st.warning(f"Could not load image with ID: {file_id}")
             except Exception as e:
