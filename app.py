@@ -116,7 +116,7 @@ class StreamlitImageSearch:
                 st.error(f"Error loading image {file_id}: {str(e)}")
 
     def run(self):
-        st.title("🔍 Multi-Model Image Search Engine")
+        st.title("🔍 Multi-Modal Image Search Engine")
         st.markdown("""
         This application uses CLIP and CLIPv2 models to search for images based on text descriptions.
         Enter your query below to find matching images.
@@ -124,7 +124,7 @@ class StreamlitImageSearch:
 
         st.markdown("### Search Settings")
         k_results = st.slider("Number of results", 1, 20, 9)
-        model_type = st.selectbox("Model Type", ["clip", "clip_v2"])
+        model_type = st.selectbox("Model Type", ["ViT-B/16 (CLIP)", "ViT-L-14 (CLIPv2)"])
 
         st.header("Enter your search query")
         query = st.text_area(
