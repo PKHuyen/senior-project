@@ -93,11 +93,12 @@ class StreamlitImageSearch:
         if not self.search_engine:
             st.stop()
 
-    def load_and_display_images(self, file_ids: List[str], scores: List[float]):
+    def load_and_display_images(self, file_ids: List[str], scores: List[float], infos_query: List[dict]):
         cols = st.columns(3) 
 
-        for idx, (file_id, score) in enumerate(zip(file_ids, scores)):
+        for idx, (file_id, score, info) in enumerate(zip(file_ids, scores, infos_query)):
             try:
+                print(info)
                 col_idx = idx % 3
                 with cols[col_idx]:
                     image = self.drive_manager.download_file_from_drive(file_id)
@@ -107,6 +108,8 @@ class StreamlitImageSearch:
                         with st.expander("Image Details"):
                             st.text(f"Google Drive File ID: {file_id}")
                             st.text(f"Share URL: https://drive.google.com/uc?id={file_id}")
+                            st.text(f"Video ID: {info.get('video_ID', 'N/A')}")
+                            st.text(f"Timestamp: {info.get('timestamp', 'N/A')}")
                     else:
                         st.warning(f"Could not load image with ID: {file_id}")
             except Exception as e:
@@ -158,96 +161,7 @@ class StreamlitImageSearch:
                             - Results found: {len(image_paths)}
                             - Top score: {scores[0]:.4f}
                             """)
-                            self.load_and_display_images(image_paths, scores)
-
-                except Exception as e:
-                    st.error(f"Search error: {str(e)}")
-                    logging.error(f"Search error: {str(e)}")
-                    import traceback
-                    st.code(traceback.format_exc())
-            else:
-                st.warning("Please enter a search query")
-
-    def __init__(self):
-        st.set_page_config(
-            page_title="Image Search Engine",
-            page_icon="🔍",
-            layout="wide"
-        )
-        
-        self.drive_manager = GoogleDriveKeyframeManager()
-        self.search_engine = initialize_search_engine(self.drive_manager.service)
-        
-        if not self.search_engine:
-            st.stop()
-
-    def load_and_display_images(self, file_ids: List[str], scores: List[float]):
-        cols = st.columns(3) 
-
-        for idx, (file_id, score) in enumerate(zip(file_ids, scores)):
-            try:
-                col_idx = idx % 3
-                with cols[col_idx]:
-                    image = self.drive_manager.download_file_from_drive(file_id)
-                    
-                    if image:
-                        st.image(image, caption=f"Score: {score:.4f}")
-                        with st.expander("Image Details"):
-                            st.text(f"Google Drive File ID: {file_id}")
-                            st.text(f"Share URL: https://drive.google.com/uc?id={file_id}")
-                    else:
-                        st.warning(f"Could not load image with ID: {file_id}")
-            except Exception as e:
-                st.error(f"Error loading image {file_id}: {str(e)}")
-
-    def run(self):
-        st.title("🔍 Multi-Model Image Search Engine")
-        st.markdown("""
-        This application uses CLIP and CLIPv2 models to search for images based on text descriptions.
-        Enter your query below to find matching images.
-        """)
-
-        st.markdown("### Search Settings")
-        k_results = st.slider("Number of results", 1, 20, 9)
-        model_type = st.selectbox("Model Type", ["clip", "clip_v2"])
-        
-        st.header("Enter your search query")
-
-        query = st.text_area(
-            "Describe what you're looking for:",
-            height=100,
-            placeholder="Enter your search query here..."
-        )
-
-        search_col1, search_col2 = st.columns([3, 1])
-        with search_col1:
-            search_clicked = st.button("🔍 Search", type="primary", use_container_width=True)
-        with search_col2:
-            st.info(f"Using {model_type.upper()} model")
-
-        if search_clicked:
-            if query and self.search_engine:
-                try:
-                    with st.spinner(f"Searching with {model_type.upper()} for: '{query}'"):
-                        scores, _, infos_query, image_paths = self.search_engine.text_search(
-                            text=query,
-                            k=k_results,
-                            index=None,
-                            model_type=model_type
-                        )
-
-                        if not image_paths:
-                            st.warning("No images found matching your query.")
-                        else:
-                            st.markdown(f"### Found {len(image_paths)} results")
-                            st.info(f"""
-                            🔍 Search Summary:
-                            - Query: "{query}"
-                            - Model: {model_type.upper()}
-                            - Results found: {len(image_paths)}
-                            - Top score: {scores[0]:.4f}
-                            """)
-                            self.load_and_display_images(image_paths, scores)
+                            self.load_and_display_images(image_paths, scores, infos_query)
 
                 except Exception as e:
                     st.error(f"Search error: {str(e)}")
